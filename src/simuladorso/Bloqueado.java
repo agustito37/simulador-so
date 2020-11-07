@@ -17,12 +17,23 @@ public class Bloqueado implements Estado {
     }
     
     @Override
-    public void eliminarProceso(Proceso proceso) {
+    public void quitarProceso(Proceso proceso) {
         procesos.remove(proceso);
     }
     
     @Override
+    public void vaciar() {
+        procesos.clear();
+    }
+    
+    @Override
+    public boolean estaVacio() {
+        return procesos.isEmpty();
+    }
+    
+    @Override
     public Iterator<Proceso> obtenerProcesos() {
-        return procesos.iterator();
+        // clonar para evitar modificación concurrente del iterador
+        return (new ArrayList(procesos)).iterator();
     }
 }

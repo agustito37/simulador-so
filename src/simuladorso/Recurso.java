@@ -1,49 +1,48 @@
-
 package simuladorso;
+
+import java.util.Queue;
+import java.util.LinkedList;
 
 /**
  *
  * @author Mauro
  */
 public class Recurso {
-    
-    private boolean disponible = true;
     private String idRecurso;
-    private Proceso proceso;
-
-    public Proceso getProceso() {
-        return proceso;
-    }
-
-    public void setProceso(Proceso proceso) {
-        this.proceso = proceso;
-    }
-
-    public Recurso(String unRecurso, Proceso unProceso) {
-        disponible = true;
-        proceso = unProceso;
+    private Queue<Proceso> procesos;
+    
+    public Recurso(String unRecurso, Proceso proceso) {
+        procesos = new LinkedList();
+        procesos.add(proceso);
         idRecurso = unRecurso;
     }
     
-     public Recurso(String unRecurso, boolean esDisponible) {
-        disponible = esDisponible;
+    public Recurso(String unRecurso) {
+        procesos = new LinkedList();
         idRecurso = unRecurso;
     }
 
-
-    public boolean isDisponible() {
-        return disponible;
+    public Proceso obtenerSiguienteProceso() {
+        return procesos.peek();
     }
 
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
+    public void encolarProceso(Proceso proceso) {
+        this.procesos.add(proceso);
+    }
+    
+    public Proceso desencolarProceso() {
+        return this.procesos.poll();
     }
 
-    public String getId() {
+    public boolean estaDisponible() {
+        return this.procesos.isEmpty();
+    }
+
+    public String obtenerId() {
         return idRecurso;
     }
 
-    public void setId(String id) {
+    public void setearId(String id) {
         this.idRecurso = id;
     }
 }

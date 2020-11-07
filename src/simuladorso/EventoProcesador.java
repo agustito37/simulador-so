@@ -9,4 +9,8 @@ package simuladorso;
  *
  * @author Mauro
  */
-public enum TipoEstado{bloqueado, desbloquear, listo, ejecutando, finalizado};
+public enum EventoProcesador {
+    bloqueado, 
+    desbloquedo, 
+    finalizado
+};

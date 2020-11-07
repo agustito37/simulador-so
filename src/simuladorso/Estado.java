@@ -13,6 +13,8 @@ import java.util.Iterator;
  */
 public interface Estado {
     public void agregarProceso(Proceso proceso);
-    public void eliminarProceso(Proceso proceso);
+    public void quitarProceso(Proceso proceso);
+    public void vaciar();
+    public boolean estaVacio();
     public Iterator<Proceso> obtenerProcesos();
 }

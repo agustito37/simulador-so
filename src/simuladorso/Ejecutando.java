@@ -1,16 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package simuladorso;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- *
- * @author agustin
- */
+
 public class Ejecutando implements Estado {
     private ArrayList<Proceso> procesos;
     
@@ -24,12 +17,23 @@ public class Ejecutando implements Estado {
     }
     
     @Override
-    public void eliminarProceso(Proceso proceso) {
+    public void quitarProceso(Proceso proceso) {
         procesos.remove(proceso);
     }
     
     @Override
+    public void vaciar() {
+        procesos.clear();
+    }
+    
+    @Override
+    public boolean estaVacio() {
+        return procesos.isEmpty();
+    }
+    
+    @Override
     public Iterator<Proceso> obtenerProcesos() {
-        return procesos.iterator();
+        // clonar para evitar modificación concurrente del iterador
+        return (new ArrayList(procesos)).iterator();
     }
 }

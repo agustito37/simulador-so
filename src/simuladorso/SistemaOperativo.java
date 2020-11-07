@@ -1,7 +1,5 @@
 package simuladorso;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -15,51 +13,75 @@ import java.util.ArrayList;
  */
 public class SistemaOperativo {
     private Estado ejecutando;
-    private Estado finalizado;
+    private Estado bloqueado;
+    private Estado listo;
     private AdministradorRecursos administradorRecursos;
     
     public SistemaOperativo() {
         ejecutando = new Ejecutando();
-        finalizado = new Finalizado();
+        bloqueado = new Bloqueado();
+        listo = new Listo();
         administradorRecursos = new AdministradorRecursos();
     }
     
     public void iniciar() {
         Proceso proceso1 = new Proceso(administradorRecursos);
-        Programa programa = new Programa("A T D Y E RS1 RS2 RD2");
+        Programa programa = new Programa("RS1 T J K RD1");
         proceso1.setearPrograma(programa);
         ejecutando.agregarProceso(proceso1);
         
         Proceso proceso2 = new Proceso(administradorRecursos);
-        Programa programa2 = new Programa("A I O G P Z RS1 RS2");
+        Programa programa2 = new Programa("RS1 P");
         proceso2.setearPrograma(programa2);
         ejecutando.agregarProceso(proceso2);
     }
     
-    public void recibeEvento(TipoEstado estado, Proceso proceso) {
-        
-        if(estado == TipoEstado.finalizado){
-            
+    public void recibeEventoProcesador(EventoProcesador estado, Proceso proceso) {
+        switch (estado) {
+            case finalizado:
+                ejecutando.quitarProceso(proceso);
+                break;
+            case bloqueado:
+                ejecutando.quitarProceso(proceso);
+                bloqueado.agregarProceso(proceso);
+                break;
+            case desbloquedo:
+                bloqueado.quitarProceso(proceso);
+                listo.agregarProceso(proceso);
+                break;
+            default:
+                break;
         }
-       
     }
     
-    public void ejecutar() {
-        Iterator<Proceso> procesos = ejecutando.obtenerProcesos();
-        while(procesos.hasNext()) {
+    public void ejecutar() throws InterruptedException {
+        // mientras tenga procesos que ejecutar
+        while(true) {
             
+            // ejecuto procesos en la lista de ejecucion
+            Iterator<Proceso> procesos = ejecutando.obtenerProcesos();
             while (procesos.hasNext()) {
                 Proceso proceso = procesos.next();
-                
                 proceso.ejecutarPrograma(this);
             }
             
-            procesos = ejecutando.obtenerProcesos();
+            // agrego a la lista de ejecucion procesos listos
+            Iterator<Proceso> procesosListos = listo.obtenerProcesos();
+            while (procesosListos.hasNext()) {
+                ejecutando.agregarProceso(procesosListos.next());
+            }
+            listo.vaciar();
+            
+            // chequeo estado del sistema operativo
+            if (ejecutando.estaVacio()) {
+                if (bloqueado.estaVacio()) {
+                    System.out.println("Nada más que ejecutar");
+                    break;
+                } else {
+                    System.out.println("Quedan procesos bloqueados");
+                    Thread.sleep(1000);
+                }
+            }
         }
-    }
-    
-    public void finalizarProcesos(Proceso proceso){
-        ejecutando.eliminarProceso(proceso);
-        finalizado.agregarProceso(proceso);
     }
 }
