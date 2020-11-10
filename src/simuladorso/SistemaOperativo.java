@@ -11,7 +11,8 @@ import java.util.Iterator;
  *
  * @author agustin
  */
-public class SistemaOperativo {
+public class SistemaOperativo implements Transicionable {
+    private final int CANT_NUCLEOS = 1;
     private Estado ejecutando;
     private Estado bloqueado;
     private Estado listo;
@@ -28,52 +29,72 @@ public class SistemaOperativo {
         Proceso proceso1 = new Proceso(administradorRecursos);
         Programa programa = new Programa("RS1 T J K RD1");
         proceso1.setearPrograma(programa);
-        ejecutando.agregarProceso(proceso1);
+        transicion(Transicion.comenzar, proceso1);
         
         Proceso proceso2 = new Proceso(administradorRecursos);
         Programa programa2 = new Programa("RS1 P");
         proceso2.setearPrograma(programa2);
-        ejecutando.agregarProceso(proceso2);
+        transicion(Transicion.comenzar, proceso2);
     }
     
-    public void recibeEventoProcesador(EventoProcesador estado, Proceso proceso) {
-        switch (estado) {
-            case finalizado:
-                ejecutando.quitarProceso(proceso);
+    @Override
+    public void transicion(Transicion transicion, Proceso proceso) {
+        String output = "Proceso " + proceso + ": ";
+        switch (transicion) {
+            case comenzar:
+                listo.agregarProceso(proceso);
+                output += "comenzado";
                 break;
-            case bloqueado:
+            case terminar:
+                ejecutando.quitarProceso(proceso);
+                output += "terminado";
+                break;
+            case bloquear:
                 ejecutando.quitarProceso(proceso);
                 bloqueado.agregarProceso(proceso);
+                output += "bloqueado";
                 break;
-            case desbloquedo:
+            case despertar:
                 bloqueado.quitarProceso(proceso);
                 listo.agregarProceso(proceso);
+                output += "despertado";
+                break;
+            case timeout:
+                ejecutando.quitarProceso(proceso);
+                listo.agregarProceso(proceso);
+                output += "timeout";
+                break;
+            case despachar:
+                listo.quitarProceso(proceso);
+                ejecutando.agregarProceso(proceso);
+                output += "despachado";
                 break;
             default:
                 break;
         }
+        System.out.println(output);
     }
     
     public void ejecutar() throws InterruptedException {
         // mientras tenga procesos que ejecutar
         while(true) {
+            // despacho procesos según cantidad de núcleos
+            Iterator<Proceso> procesosListos = listo.obtenerProcesos();
+            int despachados = 0;
+            while (procesosListos.hasNext() && despachados < CANT_NUCLEOS) {
+                transicion(Transicion.despachar, procesosListos.next());
+                despachados++;
+            }
             
             // ejecuto procesos en la lista de ejecucion
-            Iterator<Proceso> procesos = ejecutando.obtenerProcesos();
-            while (procesos.hasNext()) {
-                Proceso proceso = procesos.next();
+            Iterator<Proceso> procesosAEjecutar = ejecutando.obtenerProcesos();
+            while (procesosAEjecutar.hasNext()) {
+                Proceso proceso = procesosAEjecutar.next();
                 proceso.ejecutarPrograma(this);
             }
             
-            // agrego a la lista de ejecucion procesos listos
-            Iterator<Proceso> procesosListos = listo.obtenerProcesos();
-            while (procesosListos.hasNext()) {
-                ejecutando.agregarProceso(procesosListos.next());
-            }
-            listo.vaciar();
-            
             // chequeo estado del sistema operativo
-            if (ejecutando.estaVacio()) {
+            if (listo.estaVacio()) {
                 if (bloqueado.estaVacio()) {
                     System.out.println("Nada más que ejecutar");
                     break;

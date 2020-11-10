@@ -9,8 +9,11 @@ package simuladorso;
  *
  * @author Mauro
  */
-public enum EventoProcesador {
-    bloqueado, 
-    desbloquedo, 
-    finalizado
+public enum Transicion {
+    comenzar,
+    bloquear, 
+    despertar,
+    terminar,
+    timeout,
+    despachar
 };

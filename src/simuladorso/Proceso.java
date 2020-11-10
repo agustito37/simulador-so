@@ -1,7 +1,7 @@
 package simuladorso;
 
 public class Proceso {
-    private final int CANTIDAD_OPERACIONES = 4;
+    private final int CANT_OPERACIONES_CICLO = 4;
     private final int DELAY_OPERACIONES = 500;
     private static int ultimoId = 0;
     private int id;
@@ -20,14 +20,14 @@ public class Proceso {
         this.programa = programa;
     }
     
-    public void ejecutarPrograma(SistemaOperativo sistema) throws InterruptedException {
-        int hasta = linea + CANTIDAD_OPERACIONES;
+    public void ejecutarPrograma(Transicionable sistema) throws InterruptedException {
+        int hasta = linea + CANT_OPERACIONES_CICLO;
         
         // ejecuto x Cantidad de operaciones del programa
         while (linea < hasta) {
             // si ya no tiene líneas que ejecutar
             if (!programa.hasNext()) {
-                sistema.recibeEventoProcesador(EventoProcesador.finalizado, this);
+                sistema.transicion(Transicion.terminar, this);
                 return;
             }
             
@@ -38,8 +38,8 @@ public class Proceso {
             if(esRecursoSolicitar(instruccion)){
                 // si estoy solicitando un recurso y no está disponible, lo bloqueo
                 if(!administradorRecursos.solicitar(instruccion, this)){
-                    sistema.recibeEventoProcesador(EventoProcesador.bloqueado, this);
-                    break;
+                    sistema.transicion(Transicion.bloquear, this);
+                    return;
                 }
             }
             // si estoy devolviendo un recurso, desbloqueo el siguiente en la cola de espera
@@ -47,13 +47,16 @@ public class Proceso {
                 Proceso siguienteProceso = administradorRecursos.devolver(instruccion, this);
                 
                 if (siguienteProceso != null) {
-                    sistema.recibeEventoProcesador(EventoProcesador.desbloquedo, siguienteProceso);
+                    sistema.transicion(Transicion.despertar, siguienteProceso);
                 }
             }
             
             // simulo delay en las operaciones
             Thread.sleep(DELAY_OPERACIONES);
         }
+        
+        // si termina de ejecutar, es timeout, envío a listos
+        sistema.transicion(Transicion.timeout, this);
     }
     
     public boolean esRecurso(String instruccion){
