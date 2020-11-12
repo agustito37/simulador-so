@@ -1,5 +1,7 @@
 package simuladorso;
+import gui.GUIInterface;
 import java.util.Iterator;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,29 +14,34 @@ import java.util.Iterator;
  * @author agustin
  */
 public class SistemaOperativo implements Transicionable {
-    private final int CANT_NUCLEOS = 1;
+    private int cantNucleos;
+    private int operacionesCiclo;
+    private int operacionesDelay;
     private Estado ejecutando;
     private Estado bloqueado;
     private Estado listo;
-    private AdministradorRecursos administradorRecursos;
+    public AdministradorRecursos administradorRecursos;
+    private List<Proceso> procesos;
     
-    public SistemaOperativo() {
+    public SistemaOperativo(List<Proceso> pProcesos, int pCantNucleos, int pOperacionesCiclo, int pOperacionesDelay) {
+        cantNucleos = pCantNucleos;
+        operacionesCiclo = pOperacionesCiclo;
+        operacionesDelay = pOperacionesDelay;
         ejecutando = new Ejecutando();
         bloqueado = new Bloqueado();
         listo = new Listo();
         administradorRecursos = new AdministradorRecursos();
+        procesos = pProcesos;
     }
     
     public void iniciar() {
-        Proceso proceso1 = new Proceso(administradorRecursos);
-        Programa programa = new Programa("RS1 T J K RD1");
-        proceso1.setearPrograma(programa);
-        transicion(Transicion.comenzar, proceso1);
-        
-        Proceso proceso2 = new Proceso(administradorRecursos);
-        Programa programa2 = new Programa("RS1 P");
-        proceso2.setearPrograma(programa2);
-        transicion(Transicion.comenzar, proceso2);
+        for (int x = 0; x < procesos.size(); x++) {
+            // clono proceso y programa para no reutilizarlo cada vez que se inicia el sistema operativo
+            Proceso proceso = procesos.get(x).nuevo();
+            proceso.setearPrograma(proceso.programa.nuevo());
+            
+            transicion(Transicion.comenzar, proceso);
+        }
     }
     
     @Override
@@ -72,7 +79,7 @@ public class SistemaOperativo implements Transicionable {
             default:
                 break;
         }
-        System.out.println(output);
+        GUIInterface.write(output);
     }
     
     public void ejecutar() throws InterruptedException {
@@ -81,7 +88,7 @@ public class SistemaOperativo implements Transicionable {
             // despacho procesos según cantidad de núcleos
             Iterator<Proceso> procesosListos = listo.obtenerProcesos();
             int despachados = 0;
-            while (procesosListos.hasNext() && despachados < CANT_NUCLEOS) {
+            while (procesosListos.hasNext() && despachados < cantNucleos) {
                 transicion(Transicion.despachar, procesosListos.next());
                 despachados++;
             }
@@ -90,16 +97,16 @@ public class SistemaOperativo implements Transicionable {
             Iterator<Proceso> procesosAEjecutar = ejecutando.obtenerProcesos();
             while (procesosAEjecutar.hasNext()) {
                 Proceso proceso = procesosAEjecutar.next();
-                proceso.ejecutarPrograma(this);
+                proceso.ejecutarPrograma(this, administradorRecursos, operacionesCiclo, operacionesDelay);
             }
             
             // chequeo estado del sistema operativo
             if (listo.estaVacio()) {
                 if (bloqueado.estaVacio()) {
-                    System.out.println("Nada más que ejecutar");
+                    GUIInterface.write("Nada más que ejecutar");
                     break;
                 } else {
-                    System.out.println("Quedan procesos bloqueados");
+                    GUIInterface.write("Quedan procesos bloqueados");
                     Thread.sleep(1000);
                 }
             }

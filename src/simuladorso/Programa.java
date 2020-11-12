@@ -13,10 +13,12 @@ import java.util.Iterator;
 public class Programa implements Iterator<String> {
     private final String DELIMITADORES = "\\s+|\\r?\\n+";
     private String[] operaciones;
+    private String cadena;
     private int linea;
     
-    public Programa(String cadena) {
+    public Programa(String pCadena) {
         linea = -1;
+        cadena = pCadena;
         operaciones = cadena.split(DELIMITADORES);
     }
     
@@ -27,7 +29,20 @@ public class Programa implements Iterator<String> {
     
     @Override
     public String next(){
-        linea += 1;
+        linea++;
         return operaciones[linea];
+    }
+    
+    public void back() {
+        linea--;
+    }
+    
+    @Override
+    public String toString(){
+        return cadena;
+    }
+    
+    public Programa nuevo( ) {
+        return new Programa(this.cadena);
     }
 }

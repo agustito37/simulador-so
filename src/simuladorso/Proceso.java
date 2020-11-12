@@ -1,17 +1,15 @@
 package simuladorso;
 
+import gui.GUIInterface;
+
 public class Proceso {
-    private final int CANT_OPERACIONES_CICLO = 4;
-    private final int DELAY_OPERACIONES = 500;
     private static int ultimoId = 0;
-    private int id;
+    public int id;
     private int linea;
-    private Programa programa;
-    private AdministradorRecursos administradorRecursos;
+    public Programa programa;
     
-    public Proceso(AdministradorRecursos administrador) {
+    public Proceso() {
         Proceso.ultimoId += 1;
-        administradorRecursos = administrador;
         id = Proceso.ultimoId;
         linea = 0;
     }
@@ -20,8 +18,8 @@ public class Proceso {
         this.programa = programa;
     }
     
-    public void ejecutarPrograma(Transicionable sistema) throws InterruptedException {
-        int hasta = linea + CANT_OPERACIONES_CICLO;
+    public void ejecutarPrograma(Transicionable sistema, AdministradorRecursos administrador, int operacionesCiclo, int operacionesDelay) throws InterruptedException {
+        int hasta = linea + operacionesCiclo;
         
         // ejecuto x Cantidad de operaciones del programa
         while (linea < hasta) {
@@ -31,28 +29,40 @@ public class Proceso {
                 return;
             }
             
+            Thread.sleep(operacionesDelay);
             linea += 1;
             String instruccion = programa.next();
-            System.out.println(instruccion);
+            String output = "Proceso " + this.id + ": " + instruccion;
             
             if(esRecursoSolicitar(instruccion)){
+                output += " solicitado";
+                
                 // si estoy solicitando un recurso y no está disponible, lo bloqueo
-                if(!administradorRecursos.solicitar(instruccion, this)){
+                if(!administrador.solicitar(instruccion, this)){
+                    output += " (en uso)";
+                    GUIInterface.write(output);
+                    
+                    programa.back();
                     sistema.transicion(Transicion.bloquear, this);
+                    
                     return;
-                }
+                } 
             }
             // si estoy devolviendo un recurso, desbloqueo el siguiente en la cola de espera
             else if(esRecursoDevolver(instruccion)){
-                Proceso siguienteProceso = administradorRecursos.devolver(instruccion, this);
+                Proceso siguienteProceso = administrador.devolver(instruccion, this);
+                
+                output += " devuelto";
+                GUIInterface.write(output);
                 
                 if (siguienteProceso != null) {
                     sistema.transicion(Transicion.despertar, siguienteProceso);
                 }
+                
+                continue;
             }
             
-            // simulo delay en las operaciones
-            Thread.sleep(DELAY_OPERACIONES);
+            GUIInterface.write(output);
         }
         
         // si termina de ejecutar, es timeout, envío a listos
@@ -74,5 +84,12 @@ public class Proceso {
     @Override
     public String toString() {
         return Integer.toString(id);
+    }
+    
+    public Proceso nuevo() {
+        Proceso proceso = new Proceso();
+        proceso.id = this.id;
+        proceso.setearPrograma(this.programa);
+        return proceso;
     }
 }
