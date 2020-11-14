@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class SistemaOperativo implements Transicionable {
     private int cantNucleos;
+    private int quantum;
     private int operacionesCiclo;
     private int operacionesDelay;
     private Estado ejecutando;
@@ -22,9 +23,11 @@ public class SistemaOperativo implements Transicionable {
     private Estado listo;
     public AdministradorRecursos administradorRecursos;
     private List<Proceso> procesos;
+    private List<Operacion> operaciones;
     
-    public SistemaOperativo(List<Proceso> pProcesos, int pCantNucleos, int pOperacionesCiclo, int pOperacionesDelay) {
+    public SistemaOperativo(List<Proceso> pProcesos, List<Operacion> pOperaciones, int pCantNucleos, int pQuantum, int pOperacionesCiclo, int pOperacionesDelay) {
         cantNucleos = pCantNucleos;
+        quantum = pQuantum;
         operacionesCiclo = pOperacionesCiclo;
         operacionesDelay = pOperacionesDelay;
         ejecutando = new Ejecutando();
@@ -32,6 +35,7 @@ public class SistemaOperativo implements Transicionable {
         listo = new Listo();
         administradorRecursos = new AdministradorRecursos();
         procesos = pProcesos;
+        operaciones = pOperaciones;
     }
     
     public void iniciar() {
@@ -97,7 +101,7 @@ public class SistemaOperativo implements Transicionable {
             Iterator<Proceso> procesosAEjecutar = ejecutando.obtenerProcesos();
             while (procesosAEjecutar.hasNext()) {
                 Proceso proceso = procesosAEjecutar.next();
-                proceso.ejecutarPrograma(this, administradorRecursos, operacionesCiclo, operacionesDelay);
+                proceso.ejecutarPrograma(this, administradorRecursos, quantum, operaciones, operacionesCiclo, operacionesDelay);
             }
             
             // chequeo estado del sistema operativo

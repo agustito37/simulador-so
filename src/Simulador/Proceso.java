@@ -2,6 +2,7 @@ package Simulador;
 
 import Interfaz.GUIInterface;
 import java.io.Serializable;
+import java.util.List;
 
 public class Proceso implements Serializable {
     private static int ultimoId = 0;
@@ -19,11 +20,26 @@ public class Proceso implements Serializable {
         this.programa = programa;
     }
     
-    public synchronized void ejecutarPrograma(Transicionable sistema, AdministradorRecursos administrador, int operacionesCiclo, int operacionesDelay) throws InterruptedException {
-        int hasta = linea + operacionesCiclo;
+    public int obtenerPeso(List<Operacion> operaciones, String operacion) {
+        for (int x = 0; x < operaciones.size(); x += 1) {
+            Operacion actual = operaciones.get(x);
+            
+            if (actual.operacion.equals(operacion)) {
+                return actual.peso;
+            }
+        }
+        
+        return 0;
+    }
+    
+    public synchronized void ejecutarPrograma(
+            Transicionable sistema, AdministradorRecursos administrador, int quantum, List<Operacion> operaciones, 
+            int operacionesCiclo, int operacionesDelay
+    ) throws InterruptedException {
+        int suma = 0;
         
         // ejecuto x Cantidad de operaciones del programa
-        while (linea < hasta) {
+        while (suma < quantum) {
             // si ya no tiene líneas que ejecutar
             if (!programa.hasNext()) {
                 sistema.transicion(Transicion.terminar, this);
@@ -32,9 +48,11 @@ public class Proceso implements Serializable {
      
             sistema.wait(operacionesDelay);
             linea += 1;
-            String instruccion = programa.next();
-            String output = "Proceso " + this.id + ": " + instruccion;
             
+            String instruccion = programa.next();
+            suma += obtenerPeso(operaciones, instruccion);
+            
+            String output = "Proceso " + this.id + ": " + instruccion;
             if(esRecursoSolicitar(instruccion)){
                 output += " solicitado";
                 

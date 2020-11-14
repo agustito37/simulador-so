@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import Simulador.Proceso;
 import Simulador.Programa;
+import Simulador.Operacion;
 import Simulador.SistemaOperativo;
 
 /**
@@ -22,6 +23,7 @@ public class Paneles extends JFrame {
     private SistemaOperativo sistema;
     ProgramasListModel programas = new ProgramasListModel();
     ProcesosTableModel procesos = new ProcesosTableModel();
+    OperacionesTableModel operaciones = new OperacionesTableModel();
 
     /**
      * Creates new form Panels
@@ -34,7 +36,7 @@ public class Paneles extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e){
-                Datos.guardarDatos(programas.lista, procesos.lista);
+                Datos.guardarDatos(programas.lista, procesos.lista, operaciones.lista);
             }
         });
     }
@@ -53,6 +55,12 @@ public class Paneles extends JFrame {
         } else {
             procesos = new ProcesosTableModel();
         }
+        
+        if (Datos.operaciones != null) {
+            operaciones = new OperacionesTableModel(Datos.operaciones);
+        } else {
+            operaciones = new OperacionesTableModel();
+        }
     }
     
     private void initControls() {
@@ -60,6 +68,7 @@ public class Paneles extends JFrame {
         ProgramasList.setModel(programas);
         ProgramasTable.setModel(programas);
         ProcesosTable.setModel(procesos);
+        OperacionesTable.setModel(operaciones);
     }
 
     /**
@@ -81,6 +90,8 @@ public class Paneles extends JFrame {
         jLabel5 = new javax.swing.JLabel();
         operacionesDelay = new javax.swing.JTextField();
         jButton7 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        quantumTxt = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         OutputTxt = new javax.swing.JTextArea();
         Iniciar = new javax.swing.JButton();
@@ -104,6 +115,16 @@ public class Paneles extends JFrame {
         jButton6 = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         ProgramasTable = new javax.swing.JList<>();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        operacionTxt = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        pesoTxt = new javax.swing.JTextField();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        OperacionesTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -133,6 +154,15 @@ public class Paneles extends JFrame {
             }
         });
 
+        jLabel6.setText("Quantum:");
+
+        quantumTxt.setText("100");
+        quantumTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantumTxtActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -141,9 +171,12 @@ public class Paneles extends JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel2)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(59, 59, 59)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel6)))
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(operacionesCiclo)
@@ -152,7 +185,8 @@ public class Paneles extends JFrame {
                         .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton7)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(quantumTxt, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -161,16 +195,19 @@ public class Paneles extends JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nucleos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(quantumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(operacionesCiclo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(operacionesCiclo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton7)))
         );
 
         OutputTxt.setEditable(false);
@@ -203,13 +240,13 @@ public class Paneles extends JFrame {
         Sistema.setLayout(SistemaLayout);
         SistemaLayout.setHorizontalGroup(
             SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 874, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(SistemaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SistemaLayout.createSequentialGroup()
-                        .addGap(0, 583, Short.MAX_VALUE)
+                        .addGap(0, 595, Short.MAX_VALUE)
                         .addComponent(Iniciar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2)
@@ -220,8 +257,8 @@ public class Paneles extends JFrame {
             SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SistemaLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 445, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Iniciar)
@@ -287,7 +324,7 @@ public class Paneles extends JFrame {
             .addGroup(ProcesosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ProcesosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ProcesosLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton4)))
@@ -382,6 +419,100 @@ public class Paneles extends JFrame {
 
         Paneles.addTab("Programas", Programas);
 
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(" Configuración "));
+
+        jLabel7.setText("Operación:");
+
+        operacionTxt.setText("A");
+        operacionTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                operacionTxtActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setText("Peso:");
+
+        pesoTxt.setText("100");
+        pesoTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pesoTxtActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText("Agregar");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pesoTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 677, Short.MAX_VALUE)
+                    .addComponent(operacionTxt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton8)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(operacionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(pesoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(67, 67, 67))
+        );
+
+        jButton9.setText("Eliminar");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
+        jScrollPane5.setViewportView(OperacionesTable);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton9))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
+                .addComponent(jButton9)
+                .addContainerGap())
+        );
+
+        Paneles.addTab("Operaciones", jPanel4);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -434,9 +565,10 @@ public class Paneles extends JFrame {
             try {
                 GUIInterface.write("Sistema Operativo iniciado");
                 int cantNucleos = Integer.parseInt(nucleos.getText());
+                int quantum = Integer.parseInt(quantumTxt.getText());
                 int cantOperaciones = Integer.parseInt(operacionesCiclo.getText());
                 int delayOperaciones = Integer.parseInt(operacionesDelay.getText());
-                sistema = new SistemaOperativo(procesos.toList(), cantNucleos, cantOperaciones, delayOperaciones);
+                sistema = new SistemaOperativo(procesos.toList(), operaciones.toList(), cantNucleos, quantum, cantOperaciones, delayOperaciones);
                 sistema.iniciar();
                 sistema.ejecutar();
             } catch (InterruptedException ex) {
@@ -472,6 +604,31 @@ public class Paneles extends JFrame {
             }
         }
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void quantumTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantumTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quantumTxtActionPerformed
+
+    private void operacionTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operacionTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_operacionTxtActionPerformed
+
+    private void pesoTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pesoTxtActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        String op = operacionTxt.getText();
+        int peso = Integer.parseInt(pesoTxt.getText());
+        Operacion operacion = new Operacion(op, peso);
+        operaciones.addRow(operacion);
+        OperacionesTable.updateUI();
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        operaciones.removeRow(OperacionesTable.getSelectedRow());
+        OperacionesTable.updateUI();
+    }//GEN-LAST:event_jButton9ActionPerformed
  
     /**
      * @param args the command line arguments
@@ -509,6 +666,7 @@ public class Paneles extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Iniciar;
     private javax.swing.JTextArea OperacionTxt;
+    private javax.swing.JTable OperacionesTable;
     private javax.swing.JTextArea OutputTxt;
     private javax.swing.JTabbedPane Paneles;
     private javax.swing.JPanel Procesos;
@@ -524,21 +682,32 @@ public class Paneles extends JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTextField nucleos;
+    private javax.swing.JTextField operacionTxt;
     private javax.swing.JTextField operacionesCiclo;
     private javax.swing.JTextField operacionesDelay;
+    private javax.swing.JTextField pesoTxt;
+    private javax.swing.JTextField quantumTxt;
     // End of variables declaration//GEN-END:variables
 }
