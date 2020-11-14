@@ -35,8 +35,8 @@ public class ProgramasListModel extends AbstractListModel{
         return lista.get(index);
     }
     
-    public void add(String element) {
-        lista.add(new Programa(element));
+    public void add(Programa programa) {
+        lista.add(programa);
     }
     
     public void remove(Programa programa) {

@@ -13,6 +13,8 @@ import Simulador.Proceso;
 import Simulador.Programa;
 import Simulador.Operacion;
 import Simulador.SistemaOperativo;
+import Simulador.Usuario;
+import java.util.List;
 
 /**
  *
@@ -24,6 +26,7 @@ public class Paneles extends JFrame {
     ProgramasListModel programas = new ProgramasListModel();
     ProcesosTableModel procesos = new ProcesosTableModel();
     OperacionesTableModel operaciones = new OperacionesTableModel();
+    UsuariosTableModel usuarios = new UsuariosTableModel();
 
     /**
      * Creates new form Panels
@@ -36,7 +39,7 @@ public class Paneles extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e){
-                Datos.guardarDatos(programas.lista, procesos.lista, operaciones.lista);
+                Datos.guardarDatos(programas.lista, procesos.lista, operaciones.lista, usuarios.lista);
             }
         });
     }
@@ -61,6 +64,12 @@ public class Paneles extends JFrame {
         } else {
             operaciones = new OperacionesTableModel();
         }
+        
+        if (Datos.usuarios != null) {
+            usuarios = new UsuariosTableModel(Datos.usuarios);
+        } else {
+            usuarios = new UsuariosTableModel();
+        }
     }
     
     private void initControls() {
@@ -69,6 +78,31 @@ public class Paneles extends JFrame {
         ProgramasTable.setModel(programas);
         ProcesosTable.setModel(procesos);
         OperacionesTable.setModel(operaciones);
+        UsuariosTable.setModel(usuarios);
+        refrescarLogueados();
+    }
+    
+    private void refrescarLogueados() {
+        List<Usuario> usus = usuarios.toList();
+        LogueadosCombo.removeAllItems();
+        for (int x = 0; x < usus.size(); x += 1) {
+            LogueadosCombo.addItem(usus.get(x).idUsuario);
+        }
+    }
+    
+    private Usuario obtenerLogueado() {
+        Usuario usuario = null;
+        List<Usuario> usus = usuarios.toList();
+        String logueado = (String)LogueadosCombo.getSelectedItem();
+        
+        for (int x = 0; x < usus.size(); x += 1) {
+            usuario = usus.get(x);
+            if (logueado.equals(usuario.idUsuario)) {
+                return usuario;
+            }
+        }
+        
+        return usuario;
     }
 
     /**
@@ -92,6 +126,8 @@ public class Paneles extends JFrame {
         jButton7 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         quantumTxt = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        LogueadosCombo = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         OutputTxt = new javax.swing.JTextArea();
         Iniciar = new javax.swing.JButton();
@@ -112,6 +148,8 @@ public class Paneles extends JFrame {
         jButton5 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         OperacionTxt = new javax.swing.JTextArea();
+        jLabel12 = new javax.swing.JLabel();
+        permisoProgramaCombo = new javax.swing.JComboBox<>();
         jButton6 = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         ProgramasTable = new javax.swing.JList<>();
@@ -125,6 +163,16 @@ public class Paneles extends JFrame {
         jButton9 = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         OperacionesTable = new javax.swing.JTable();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        usuarioTxt = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jButton10 = new javax.swing.JButton();
+        permisoCombo = new javax.swing.JComboBox<>();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        UsuariosTable = new javax.swing.JTable();
+        jButton11 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -163,6 +211,8 @@ public class Paneles extends JFrame {
             }
         });
 
+        jLabel9.setText("Usuario logueado:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -170,32 +220,40 @@ public class Paneles extends JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel6)))
-                    .addComponent(jLabel2))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel9)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(operacionesCiclo)
                     .addComponent(nucleos)
+                    .addComponent(quantumTxt, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(quantumTxt, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton7))
+                            .addComponent(LogueadosCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(nucleos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                    .addComponent(LogueadosCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nucleos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(quantumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -257,14 +315,14 @@ public class Paneles extends JFrame {
             SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SistemaLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Iniciar)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         Paneles.addTab("Sistema", Sistema);
@@ -358,17 +416,33 @@ public class Paneles extends JFrame {
         OperacionTxt.setRows(5);
         jScrollPane4.setViewportView(OperacionTxt);
 
+        jLabel12.setText("Permiso:");
+
+        permisoProgramaCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Minimo", "Intermedio", "Maximo" }));
+        permisoProgramaCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                permisoProgramaComboActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(permisoProgramaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -378,9 +452,14 @@ public class Paneles extends JFrame {
                 .addComponent(jButton5)
                 .addGap(103, 103, 103))
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabel4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane4)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(permisoProgramaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jButton6.setText("Eliminar");
@@ -513,6 +592,101 @@ public class Paneles extends JFrame {
 
         Paneles.addTab("Operaciones", jPanel4);
 
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(" Configuración "));
+
+        jLabel8.setText("Usuario");
+
+        usuarioTxt.setText("Mauro");
+        usuarioTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usuarioTxtActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setText("Permiso");
+
+        jButton10.setText("Agregar");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
+        permisoCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Minimo", "Intermedio", "Maximo" }));
+        permisoCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                permisoComboActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(usuarioTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 677, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton10))
+                    .addComponent(permisoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(usuarioTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(permisoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(65, 65, 65))
+        );
+
+        jScrollPane7.setViewportView(UsuariosTable);
+
+        jButton11.setText("Eliminar");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton11))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
+                .addComponent(jButton11)
+                .addContainerGap())
+        );
+
+        Paneles.addTab("Usuarios", jPanel6);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -568,7 +742,7 @@ public class Paneles extends JFrame {
                 int quantum = Integer.parseInt(quantumTxt.getText());
                 int cantOperaciones = Integer.parseInt(operacionesCiclo.getText());
                 int delayOperaciones = Integer.parseInt(operacionesDelay.getText());
-                sistema = new SistemaOperativo(procesos.toList(), operaciones.toList(), cantNucleos, quantum, cantOperaciones, delayOperaciones);
+                sistema = new SistemaOperativo(obtenerLogueado(), procesos.toList(), operaciones.toList(), cantNucleos, quantum, cantOperaciones, delayOperaciones);
                 sistema.iniciar();
                 sistema.ejecutar();
             } catch (InterruptedException ex) {
@@ -578,13 +752,11 @@ public class Paneles extends JFrame {
         thread.start();
     }//GEN-LAST:event_IniciarActionPerformed
 
-    private void nucleosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nucleosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nucleosActionPerformed
-
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String operacionText = OperacionTxt.getText();
-        programas.add(operacionText);
+        String permisoText = (String)permisoProgramaCombo.getSelectedItem();
+        Programa programa = new Programa(operacionText, permisoText);
+        programas.add(programa);
         ProgramasTable.updateUI();
         ProgramasList.updateUI();
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -595,19 +767,6 @@ public class Paneles extends JFrame {
         ProgramasTable.updateUI();
         ProgramasList.updateUI();
     }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        synchronized(sistema)
-        {       
-            if (sistema != null) {
-                sistema.notify();   
-            }
-        }
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void quantumTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantumTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_quantumTxtActionPerformed
 
     private void operacionTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operacionTxtActionPerformed
         // TODO add your handling code here:
@@ -629,6 +788,50 @@ public class Paneles extends JFrame {
         operaciones.removeRow(OperacionesTable.getSelectedRow());
         OperacionesTable.updateUI();
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void usuarioTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuarioTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usuarioTxtActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        String nombre = usuarioTxt.getText();
+        String permiso = (String)permisoCombo.getSelectedItem();
+        Usuario usuario = new Usuario(nombre, permiso);
+        usuarios.addRow(usuario);
+        UsuariosTable.updateUI();
+        refrescarLogueados();
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        usuarios.removeRow(UsuariosTable.getSelectedRow());
+        UsuariosTable.updateUI();
+        refrescarLogueados();
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void permisoComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_permisoComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_permisoComboActionPerformed
+
+    private void permisoProgramaComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_permisoProgramaComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_permisoProgramaComboActionPerformed
+
+    private void quantumTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantumTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quantumTxtActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        synchronized(sistema)
+        {
+            if (sistema != null) {
+                sistema.notify();
+            }
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void nucleosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nucleosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nucleosActionPerformed
  
     /**
      * @param args the command line arguments
@@ -665,6 +868,7 @@ public class Paneles extends JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Iniciar;
+    private javax.swing.JComboBox<String> LogueadosCombo;
     private javax.swing.JTextArea OperacionTxt;
     private javax.swing.JTable OperacionesTable;
     private javax.swing.JTextArea OutputTxt;
@@ -675,7 +879,10 @@ public class Paneles extends JFrame {
     private javax.swing.JList<String> ProgramasList;
     private javax.swing.JList<String> ProgramasTable;
     private javax.swing.JPanel Sistema;
+    private javax.swing.JTable UsuariosTable;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -686,28 +893,38 @@ public class Paneles extends JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextField nucleos;
     private javax.swing.JTextField operacionTxt;
     private javax.swing.JTextField operacionesCiclo;
     private javax.swing.JTextField operacionesDelay;
+    private javax.swing.JComboBox<String> permisoCombo;
+    private javax.swing.JComboBox<String> permisoProgramaCombo;
     private javax.swing.JTextField pesoTxt;
     private javax.swing.JTextField quantumTxt;
+    private javax.swing.JTextField usuarioTxt;
     // End of variables declaration//GEN-END:variables
 }

@@ -34,9 +34,15 @@ public class Proceso implements Serializable {
     
     public synchronized void ejecutarPrograma(
             Transicionable sistema, AdministradorRecursos administrador, int quantum, List<Operacion> operaciones, 
-            int operacionesCiclo, int operacionesDelay
+            int operacionesCiclo, int operacionesDelay, Usuario logueado
     ) throws InterruptedException {
         int suma = 0;
+        
+        if(!programa.getPermiso().equals(logueado.permiso)){
+            GUIInterface.write("Error: permisos insuficientes.");
+            sistema.transicion(Transicion.terminar, this);
+            return;
+        }
         
         // ejecuto x Cantidad de operaciones del programa
         while (suma < quantum) {

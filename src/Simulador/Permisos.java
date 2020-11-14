@@ -31,7 +31,7 @@ public class Permisos {
         }
         else {
             permisos = new ArrayList();
-            permisos.add("Servicios Escencales");
+            permisos.add("Minimo");
         }
    
     
@@ -53,8 +53,8 @@ public class Permisos {
     
     
     boolean validarPermisos(String tipos){
-        return tipos == "Todos Los Servicios" || 
-               tipos == "Servicios Basicos" || 
-               tipos == "Servicios Escencales";
+        return tipos == "Minimo" || 
+               tipos == "Intermedio" || 
+               tipos == "Maximo";
     }
 }

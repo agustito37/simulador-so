@@ -30,7 +30,7 @@ public class AdministradorRecursos {
             return estaDisponible;
         }
         else {
-            Recurso recurso = new Recurso(id, proceso);
+            Recurso recurso = new Recurso(id, proceso, "");
             recursos.put(id, recurso);
             return true;
         }

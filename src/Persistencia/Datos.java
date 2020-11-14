@@ -16,6 +16,7 @@ import java.util.List;
 import Simulador.Programa;
 import Simulador.Proceso;
 import Simulador.Operacion;
+import Simulador.Usuario;
 
 /**
  *
@@ -26,8 +27,9 @@ public class Datos {
     public static List<Programa> programas;
     public static List<Proceso> procesos;
     public static List<Operacion> operaciones;
+    public static List<Usuario> usuarios;
             
-    public static void guardarDatos(List<Programa> programas, List<Proceso> procesos, List<Operacion> operaciones) {
+    public static void guardarDatos(List<Programa> programas, List<Proceso> procesos, List<Operacion> operaciones, List<Usuario> usuarios) {
         FileOutputStream file = null;
         
         try {
@@ -37,6 +39,7 @@ public class Datos {
             stream.writeObject(programas);
             stream.writeObject(procesos);
             stream.writeObject(operaciones);
+            stream.writeObject(usuarios);
             
             stream.close();
             file.close();
@@ -57,6 +60,7 @@ public class Datos {
             programas = (List<Programa>) stream.readObject();
             procesos = (List<Proceso>) stream.readObject();
             operaciones = (List<Operacion>) stream.readObject();
+            usuarios = (List<Usuario>) stream.readObject();
             
             stream.close();
             file.close();

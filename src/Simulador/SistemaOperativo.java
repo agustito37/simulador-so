@@ -18,6 +18,7 @@ public class SistemaOperativo implements Transicionable {
     private int quantum;
     private int operacionesCiclo;
     private int operacionesDelay;
+    private Usuario logueado;
     private Estado ejecutando;
     private Estado bloqueado;
     private Estado listo;
@@ -25,7 +26,8 @@ public class SistemaOperativo implements Transicionable {
     private List<Proceso> procesos;
     private List<Operacion> operaciones;
     
-    public SistemaOperativo(List<Proceso> pProcesos, List<Operacion> pOperaciones, int pCantNucleos, int pQuantum, int pOperacionesCiclo, int pOperacionesDelay) {
+    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, int pCantNucleos, int pQuantum, int pOperacionesCiclo, int pOperacionesDelay) {
+        logueado = pLogueado;
         cantNucleos = pCantNucleos;
         quantum = pQuantum;
         operacionesCiclo = pOperacionesCiclo;
@@ -101,7 +103,7 @@ public class SistemaOperativo implements Transicionable {
             Iterator<Proceso> procesosAEjecutar = ejecutando.obtenerProcesos();
             while (procesosAEjecutar.hasNext()) {
                 Proceso proceso = procesosAEjecutar.next();
-                proceso.ejecutarPrograma(this, administradorRecursos, quantum, operaciones, operacionesCiclo, operacionesDelay);
+                proceso.ejecutarPrograma(this, administradorRecursos, quantum, operaciones, operacionesCiclo, operacionesDelay, logueado);
             }
             
             // chequeo estado del sistema operativo
