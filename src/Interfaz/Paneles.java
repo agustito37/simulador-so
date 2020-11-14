@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package Interfaz;
 
 import Persistencia.Datos;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-import simuladorso.Proceso;
-import simuladorso.Programa;
-import simuladorso.SistemaOperativo;
+import Simulador.Proceso;
+import Simulador.Programa;
+import Simulador.SistemaOperativo;
 
 /**
  *

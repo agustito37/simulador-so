@@ -1,6 +1,6 @@
-package simuladorso;
+package Simulador;
 
-import gui.GUIInterface;
+import Interfaz.GUIInterface;
 import java.io.Serializable;
 
 public class Proceso implements Serializable {

@@ -1,4 +1,4 @@
-package simuladorso;
+package Simulador;
 
 import java.util.Queue;
 import java.util.LinkedList;

@@ -1,5 +1,5 @@
-package simuladorso;
-import gui.GUIInterface;
+package Simulador;
+import Interfaz.GUIInterface;
 import java.util.Iterator;
 import java.util.List;
 

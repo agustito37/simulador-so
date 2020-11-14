@@ -1,5 +1,5 @@
 
-package simuladorso;
+package Simulador;
 import java.util.ArrayList;
 import java.util.Iterator;
 
