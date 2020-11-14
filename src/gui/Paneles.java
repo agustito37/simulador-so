@@ -5,6 +5,10 @@
  */
 package gui;
 
+import Persistencia.Datos;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
 import simuladorso.Proceso;
 import simuladorso.Programa;
 import simuladorso.SistemaOperativo;
@@ -13,34 +17,41 @@ import simuladorso.SistemaOperativo;
  *
  * @author agustin
  */
-public class Paneles extends javax.swing.JFrame {
+public class Paneles extends JFrame {
     Thread thread;
     ProgramasListModel programas = new ProgramasListModel();
     ProcesosTableModel procesos = new ProcesosTableModel();
 
     /**
-     * Creates new form Paneles
+     * Creates new form Panels
      */
     public Paneles() {
+        cargarDatos();
         initComponents();
         initControls();
-        agregarDatosPrueba();
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e){
+                Datos.guardarDatos(programas.lista, procesos.lista);
+            }
+        });
     }
     
-    private void agregarDatosPrueba() {
-        Proceso proceso = new Proceso();
-        Programa programa = new Programa("RS1 C D E RD1");
-        proceso.setearPrograma(programa);
-        procesos.addRow(proceso);
+    private void cargarDatos() {
+        Datos.cargarDatos();
         
-        Proceso proceso2 = new Proceso();
-        Programa programa2 = new Programa("RS1 U J K RD1");
-        proceso2.setearPrograma(programa2);
-        procesos.addRow(proceso2);
+        if (Datos.programas != null) {
+            programas = new ProgramasListModel(Datos.programas);
+        } else {
+            programas = new ProgramasListModel();
+        }
         
-        
-        programas.add(programa.toString());
-        programas.add(programa2.toString());
+        if (Datos.procesos != null) {
+            procesos = new ProcesosTableModel(Datos.procesos);
+        } else {
+            procesos = new ProcesosTableModel();
+        }
     }
     
     private void initControls() {
@@ -464,10 +475,8 @@ public class Paneles extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Paneles().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Paneles().setVisible(true);
         });
     }
 

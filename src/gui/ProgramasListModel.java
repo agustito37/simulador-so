@@ -15,10 +15,14 @@ import simuladorso.Programa;
  * @author agustin
  */
 public class ProgramasListModel extends AbstractListModel{
-    private final List<Programa> lista;
+    public final List<Programa> lista;
 
     public ProgramasListModel() {
         this.lista = new ArrayList();
+    }
+    
+    public ProgramasListModel(List<Programa> pLista) {
+        this.lista = pLista;
     }
 
     @Override

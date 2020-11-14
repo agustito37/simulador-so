@@ -1,8 +1,9 @@
 package simuladorso;
 
 import gui.GUIInterface;
+import java.io.Serializable;
 
-public class Proceso {
+public class Proceso implements Serializable {
     private static int ultimoId = 0;
     public int id;
     private int linea;

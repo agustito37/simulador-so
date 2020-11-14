@@ -4,13 +4,14 @@
  * and open the template in the editor.
  */
 package simuladorso;
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
  *
  * @author agustin
  */
-public class Programa implements Iterator<String> {
+public class Programa implements Iterator<String>, Serializable {
     private final String DELIMITADORES = "\\s+|\\r?\\n+";
     private String[] operaciones;
     private String cadena;

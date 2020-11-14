@@ -16,10 +16,14 @@ import simuladorso.Proceso;
  */
 public class ProcesosTableModel extends AbstractTableModel{
    private final String[] columnNames = { "Id", "Programa" };
-   private List<Proceso> lista;
+   public List<Proceso> lista;
    
    public ProcesosTableModel() {
       lista = new ArrayList();
+   }
+   
+   public ProcesosTableModel(List<Proceso> pLista) {
+      lista = pLista;
    }
    
    @Override
