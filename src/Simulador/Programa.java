@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Simulador;
+
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -16,11 +17,21 @@ public class Programa implements Iterator<String>, Serializable {
     private String[] operaciones;
     private String cadena;
     private int linea;
+    private String permiso;
+
+    public String getPermiso() {
+        return permiso;
+    }
+
+    public void setPermiso(String permiso) {
+        this.permiso = permiso;
+    }
     
-    public Programa(String pCadena) {
+    public Programa(String pCadena, String permisoUsuario) {
         linea = -1;
         cadena = pCadena;
         operaciones = cadena.split(DELIMITADORES);
+        permiso = permisoUsuario;
     }
     
     @Override
@@ -44,6 +55,6 @@ public class Programa implements Iterator<String>, Serializable {
     }
     
     public Programa nuevo( ) {
-        return new Programa(this.cadena);
+        return new Programa(this.cadena, this.permiso);
     }
 }

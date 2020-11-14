@@ -1,5 +1,6 @@
 package Simulador;
 
+import java.util.ArrayList;
 import java.util.Queue;
 import java.util.LinkedList;
 
@@ -10,11 +11,22 @@ import java.util.LinkedList;
 public class Recurso {
     private String idRecurso;
     private Queue<Proceso> procesos;
+    private String permiso;
+
+    public String getPermiso() {
+        return permiso;
+    }
+
+    public void setPermisos(String permiso) {
+        this.permiso = permiso;
+    }
+
     
-    public Recurso(String unRecurso, Proceso proceso) {
+    public Recurso(String unRecurso, Proceso proceso, String permiso) {
         procesos = new LinkedList();
         procesos.add(proceso);
         idRecurso = unRecurso;
+        permiso = permiso;
     }
     
     public Recurso(String unRecurso) {
