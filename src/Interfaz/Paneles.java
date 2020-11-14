@@ -19,6 +19,7 @@ import Simulador.SistemaOperativo;
  */
 public class Paneles extends JFrame {
     Thread thread;
+    private SistemaOperativo sistema;
     ProgramasListModel programas = new ProgramasListModel();
     ProcesosTableModel procesos = new ProcesosTableModel();
 
@@ -79,6 +80,7 @@ public class Paneles extends JFrame {
         operacionesCiclo = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         operacionesDelay = new javax.swing.JTextField();
+        jButton7 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         OutputTxt = new javax.swing.JTextArea();
         Iniciar = new javax.swing.JButton();
@@ -122,7 +124,14 @@ public class Paneles extends JFrame {
 
         jLabel5.setText("Operaciones/Delay:");
 
-        operacionesDelay.setText("1000");
+        operacionesDelay.setText("0");
+
+        jButton7.setText("Siguiente");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -137,9 +146,13 @@ public class Paneles extends JFrame {
                         .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(operacionesDelay)
                     .addComponent(operacionesCiclo)
-                    .addComponent(nucleos))
+                    .addComponent(nucleos)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton7)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -155,7 +168,8 @@ public class Paneles extends JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton7))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -189,7 +203,7 @@ public class Paneles extends JFrame {
         Sistema.setLayout(SistemaLayout);
         SistemaLayout.setHorizontalGroup(
             SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 874, Short.MAX_VALUE)
             .addGroup(SistemaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,7 +227,7 @@ public class Paneles extends JFrame {
                     .addComponent(Iniciar)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         Paneles.addTab("Sistema", Sistema);
@@ -406,6 +420,9 @@ public class Paneles extends JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (thread != null) {
             thread.interrupt();
+            GUIInterface.write("Sistema Operativo detenido");
+        } else {
+            GUIInterface.write("Sistema Operativo no ha sido iniciado");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -419,11 +436,11 @@ public class Paneles extends JFrame {
                 int cantNucleos = Integer.parseInt(nucleos.getText());
                 int cantOperaciones = Integer.parseInt(operacionesCiclo.getText());
                 int delayOperaciones = Integer.parseInt(operacionesDelay.getText());
-                SistemaOperativo so = new SistemaOperativo(procesos.toList(), cantNucleos, cantOperaciones, delayOperaciones);
-                so.iniciar();
-                so.ejecutar();
+                sistema = new SistemaOperativo(procesos.toList(), cantNucleos, cantOperaciones, delayOperaciones);
+                sistema.iniciar();
+                sistema.ejecutar();
             } catch (InterruptedException ex) {
-                System.out.print(ex);
+                System.out.println(ex);
             }
         });
         thread.start();
@@ -447,6 +464,15 @@ public class Paneles extends JFrame {
         ProgramasList.updateUI();
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        synchronized(sistema)
+        {       
+            if (sistema != null) {
+                sistema.notify();   
+            }
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+ 
     /**
      * @param args the command line arguments
      */
@@ -497,6 +523,7 @@ public class Paneles extends JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

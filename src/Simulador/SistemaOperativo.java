@@ -82,7 +82,7 @@ public class SistemaOperativo implements Transicionable {
         GUIInterface.write(output);
     }
     
-    public void ejecutar() throws InterruptedException {
+    public synchronized void ejecutar() throws InterruptedException {
         // mientras tenga procesos que ejecutar
         while(true) {
             // despacho procesos según cantidad de núcleos
@@ -107,7 +107,7 @@ public class SistemaOperativo implements Transicionable {
                     break;
                 } else {
                     GUIInterface.write("Quedan procesos bloqueados");
-                    Thread.sleep(1000);
+                    wait(operacionesDelay == 0 ? 0 : 1000);
                 }
             }
         }

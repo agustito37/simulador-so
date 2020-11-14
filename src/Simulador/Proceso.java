@@ -19,7 +19,7 @@ public class Proceso implements Serializable {
         this.programa = programa;
     }
     
-    public void ejecutarPrograma(Transicionable sistema, AdministradorRecursos administrador, int operacionesCiclo, int operacionesDelay) throws InterruptedException {
+    public synchronized void ejecutarPrograma(Transicionable sistema, AdministradorRecursos administrador, int operacionesCiclo, int operacionesDelay) throws InterruptedException {
         int hasta = linea + operacionesCiclo;
         
         // ejecuto x Cantidad de operaciones del programa
@@ -28,9 +28,9 @@ public class Proceso implements Serializable {
             if (!programa.hasNext()) {
                 sistema.transicion(Transicion.terminar, this);
                 return;
-            }
-            
-            Thread.sleep(operacionesDelay);
+            }           
+     
+            sistema.wait(operacionesDelay);
             linea += 1;
             String instruccion = programa.next();
             String output = "Proceso " + this.id + ": " + instruccion;
