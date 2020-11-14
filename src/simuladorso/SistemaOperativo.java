@@ -31,7 +31,7 @@ public class SistemaOperativo {
         ejecutando.agregarProceso(proceso1);
         
         Proceso proceso2 = new Proceso(administradorRecursos);
-        Programa programa2 = new Programa("RS1 P");
+        Programa programa2 = new Programa("RS1 P..");
         proceso2.setearPrograma(programa2);
         ejecutando.agregarProceso(proceso2);
     }
