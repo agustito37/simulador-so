@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package simuladorso;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -14,11 +15,24 @@ public class Programa implements Iterator<String> {
     private final String DELIMITADORES = "\\s+|\\r?\\n+";
     private String[] operaciones;
     private int linea;
+    private String permiso;
+
+    public String getPermiso() {
+        return permiso;
+    }
+
+    public void setPermiso(String permiso) {
+        this.permiso = permiso;
+    }
     
-    public Programa(String cadena) {
+    
+    public Programa(String cadena, String permisoUsuario) {
         linea = -1;
         operaciones = cadena.split(DELIMITADORES);
+        permiso = permisoUsuario;
     }
+    
+    
     
     @Override
     public boolean hasNext() {
