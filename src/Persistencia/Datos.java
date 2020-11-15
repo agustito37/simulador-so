@@ -16,6 +16,7 @@ import java.util.List;
 import Simulador.Programa;
 import Simulador.Proceso;
 import Simulador.Operacion;
+import Simulador.Recurso;
 import Simulador.Usuario;
 
 /**
@@ -28,8 +29,9 @@ public class Datos {
     public static List<Proceso> procesos;
     public static List<Operacion> operaciones;
     public static List<Usuario> usuarios;
+    public static List<Recurso> recursos;
             
-    public static void guardarDatos(List<Programa> programas, List<Proceso> procesos, List<Operacion> operaciones, List<Usuario> usuarios) {
+    public static void guardarDatos(List<Programa> programas, List<Proceso> procesos, List<Operacion> operaciones, List<Usuario> usuarios, List<Recurso> recursos) {
         FileOutputStream file = null;
         
         try {
@@ -40,6 +42,7 @@ public class Datos {
             stream.writeObject(procesos);
             stream.writeObject(operaciones);
             stream.writeObject(usuarios);
+            stream.writeObject(recursos);
             
             stream.close();
             file.close();
@@ -61,6 +64,7 @@ public class Datos {
             procesos = (List<Proceso>) stream.readObject();
             operaciones = (List<Operacion>) stream.readObject();
             usuarios = (List<Usuario>) stream.readObject();
+            recursos = (List<Recurso>) stream.readObject();
             Proceso.ultimoId = obtenerIdUltimoProceso();
             
             stream.close();

@@ -25,8 +25,9 @@ public class SistemaOperativo implements Transicionable {
     public AdministradorRecursos administradorRecursos;
     private List<Proceso> procesos;
     private List<Operacion> operaciones;
+    private List<Recurso> recursos;
     
-    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, int pCantNucleos, int pQuantum, int pOperacionesCiclo, int pOperacionesDelay) {
+    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, List<Recurso> pRecursos, int pCantNucleos, int pQuantum, int pOperacionesCiclo, int pOperacionesDelay) {
         logueado = pLogueado;
         cantNucleos = pCantNucleos;
         quantum = pQuantum;
@@ -38,6 +39,7 @@ public class SistemaOperativo implements Transicionable {
         administradorRecursos = new AdministradorRecursos();
         procesos = pProcesos;
         operaciones = pOperaciones;
+        recursos = pRecursos;
     }
     
     public void iniciar() {

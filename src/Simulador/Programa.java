@@ -15,7 +15,7 @@ import java.util.Iterator;
 public class Programa implements Iterator<String>, Serializable {
     private final String DELIMITADORES = "\\s+|\\r?\\n+";
     private String[] operaciones;
-    private String cadena;
+    public String cadena;
     private int linea;
     public String permiso;
     
@@ -26,9 +26,12 @@ public class Programa implements Iterator<String>, Serializable {
         permiso = permisoUsuario;
     }
     
-    @Override
-    public boolean hasNext() {
-        return linea < operaciones.length - 1;
+    public Programa nuevo( ) {
+        return new Programa(this.cadena, this.permiso);
+    }
+    
+    public void back() {
+        linea--;
     }
     
     @Override
@@ -37,16 +40,13 @@ public class Programa implements Iterator<String>, Serializable {
         return operaciones[linea];
     }
     
-    public void back() {
-        linea--;
+    @Override
+    public boolean hasNext() {
+        return linea < operaciones.length - 1;
     }
     
     @Override
     public String toString(){
         return cadena;
-    }
-    
-    public Programa nuevo( ) {
-        return new Programa(this.cadena, this.permiso);
     }
 }

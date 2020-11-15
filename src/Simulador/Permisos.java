@@ -9,7 +9,6 @@ import java.util.ArrayList;
  */
 public class Permisos {
     private ArrayList<String> permisos;
-    
 
     public ArrayList<String> getPermisos() {
         return permisos;
@@ -33,9 +32,6 @@ public class Permisos {
             permisos = new ArrayList();
             permisos.add("Minimo");
         }
-   
-    
-        
     }
     
     public void agregarPermiso(String permiso){
@@ -49,12 +45,10 @@ public class Permisos {
             permisos.remove(permiso);
         }
     }
-
     
-    
-    boolean validarPermisos(String tipos){
-        return tipos == "Minimo" || 
-               tipos == "Intermedio" || 
-               tipos == "Maximo";
+    boolean validarPermisos(String permiso){
+        return "Minimo".equals(permiso) || 
+               "Intermedio".equals(permiso) || 
+               "Maximo".equals(permiso);
     }
 }

@@ -1,6 +1,6 @@
 package Simulador;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Queue;
 import java.util.LinkedList;
 
@@ -8,22 +8,23 @@ import java.util.LinkedList;
  *
  * @author Mauro
  */
-public class Recurso {
-    private String idRecurso;
+public class Recurso implements Serializable {
+    public String idRecurso;
     private Queue<Proceso> procesos;
     public String permiso;
 
     
-    public Recurso(String unRecurso, Proceso proceso, String permiso) {
+    public Recurso(String unRecurso, Proceso proceso, String pPermiso) {
         procesos = new LinkedList();
         procesos.add(proceso);
         idRecurso = unRecurso;
-        permiso = permiso;
+        permiso = pPermiso;
     }
     
-    public Recurso(String unRecurso) {
+    public Recurso(String unRecurso, String pPermiso) {
         procesos = new LinkedList();
         idRecurso = unRecurso;
+        permiso = pPermiso;
     }
 
     public Proceso obtenerSiguienteProceso() {
@@ -40,13 +41,5 @@ public class Recurso {
 
     public boolean estaDisponible() {
         return this.procesos.isEmpty();
-    }
-
-    public String obtenerId() {
-        return idRecurso;
-    }
-
-    public void setearId(String id) {
-        this.idRecurso = id;
     }
 }
