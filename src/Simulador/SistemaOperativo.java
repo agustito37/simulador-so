@@ -14,7 +14,6 @@ import java.util.List;
  * @author agustin
  */
 public class SistemaOperativo implements Transicionable {
-    private int cantNucleos;
     private int quantum;
     private int operacionesCiclo;
     private int operacionesDelay;
@@ -27,9 +26,8 @@ public class SistemaOperativo implements Transicionable {
     private List<Operacion> operaciones;
     private List<Recurso> recursos;
     
-    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, List<Recurso> pRecursos, int pCantNucleos, int pQuantum, int pOperacionesCiclo, int pOperacionesDelay) {
+    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, List<Recurso> pRecursos, int pQuantum, int pOperacionesCiclo, int pOperacionesDelay) {
         logueado = pLogueado;
-        cantNucleos = pCantNucleos;
         quantum = pQuantum;
         operacionesCiclo = pOperacionesCiclo;
         operacionesDelay = pOperacionesDelay;
@@ -95,10 +93,9 @@ public class SistemaOperativo implements Transicionable {
         while(true) {
             // despacho procesos según cantidad de núcleos
             Iterator<Proceso> procesosListos = listo.obtenerProcesos();
-            int despachados = 0;
-            while (procesosListos.hasNext() && despachados < cantNucleos) {
+
+            if (procesosListos.hasNext()) {
                 transicion(Transicion.despachar, procesosListos.next());
-                despachados++;
             }
             
             // ejecuto procesos en la lista de ejecucion
