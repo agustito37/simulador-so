@@ -509,7 +509,7 @@ public class Paneles extends JFrame {
             }
         });
 
-        jLabel10.setText("Peso:");
+        jLabel10.setText("Tiempo:");
 
         pesoTxt.setText("100");
         pesoTxt.addActionListener(new java.awt.event.ActionListener() {

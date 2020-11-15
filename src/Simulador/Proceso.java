@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Proceso implements Serializable {
-    private static int ultimoId = 0;
+    public static int ultimoId = 0;
     public int id;
     private int linea;
     public Programa programa;
@@ -38,20 +38,7 @@ public class Proceso implements Serializable {
     ) throws InterruptedException {
         int suma = 0;
         
-        if(!programa.getPermiso().equals(logueado.permiso)){
-            GUIInterface.write("Error: permisos insuficientes.");
-            sistema.transicion(Transicion.terminar, this);
-            return;
-        }
-        
-        // ejecuto x Cantidad de operaciones del programa
-        while (suma < quantum) {
-            // si ya no tiene líneas que ejecutar
-            if (!programa.hasNext()) {
-                sistema.transicion(Transicion.terminar, this);
-                return;
-            }           
-     
+        while (programa.hasNext() && suma < quantum) {
             sistema.wait(operacionesDelay);
             linea += 1;
             
@@ -89,6 +76,12 @@ public class Proceso implements Serializable {
             
             GUIInterface.write(output);
         }
+        
+        // si ya no tiene líneas que ejecutar
+        if (!programa.hasNext()) {
+            sistema.transicion(Transicion.terminar, this);
+            return;
+        } 
         
         // si termina de ejecutar, es timeout, envío a listos
         sistema.transicion(Transicion.timeout, this);

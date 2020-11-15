@@ -61,6 +61,7 @@ public class Datos {
             procesos = (List<Proceso>) stream.readObject();
             operaciones = (List<Operacion>) stream.readObject();
             usuarios = (List<Usuario>) stream.readObject();
+            Proceso.ultimoId = obtenerIdUltimoProceso();
             
             stream.close();
             file.close();
@@ -69,5 +70,18 @@ public class Datos {
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex);
         }
+    }
+    
+    private static int obtenerIdUltimoProceso() {
+        int mayorId = 0;
+        
+        for (int x = 0; x < procesos.size(); x += 1) {
+            Proceso proceso = procesos.get(x);
+            if (proceso.id > mayorId) {
+                mayorId = proceso.id;
+            }
+        }
+            
+        return mayorId;
     }
 }

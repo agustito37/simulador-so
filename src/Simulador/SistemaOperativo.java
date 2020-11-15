@@ -103,6 +103,14 @@ public class SistemaOperativo implements Transicionable {
             Iterator<Proceso> procesosAEjecutar = ejecutando.obtenerProcesos();
             while (procesosAEjecutar.hasNext()) {
                 Proceso proceso = procesosAEjecutar.next();
+                
+                // chequeo si tiene permisos para ejecutar el programa
+                if(!proceso.programa.permiso.equals(logueado.permiso)){
+                    GUIInterface.write("Error: permisos insuficientes.");
+                    this.transicion(Transicion.terminar, proceso);
+                    continue;
+                }
+                
                 proceso.ejecutarPrograma(this, administradorRecursos, quantum, operaciones, operacionesCiclo, operacionesDelay, logueado);
             }
             

@@ -17,15 +17,7 @@ public class Programa implements Iterator<String>, Serializable {
     private String[] operaciones;
     private String cadena;
     private int linea;
-    private String permiso;
-
-    public String getPermiso() {
-        return permiso;
-    }
-
-    public void setPermiso(String permiso) {
-        this.permiso = permiso;
-    }
+    public String permiso;
     
     public Programa(String pCadena, String permisoUsuario) {
         linea = -1;

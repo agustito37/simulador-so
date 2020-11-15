@@ -11,15 +11,7 @@ import java.util.LinkedList;
 public class Recurso {
     private String idRecurso;
     private Queue<Proceso> procesos;
-    private String permiso;
-
-    public String getPermiso() {
-        return permiso;
-    }
-
-    public void setPermisos(String permiso) {
-        this.permiso = permiso;
-    }
+    public String permiso;
 
     
     public Recurso(String unRecurso, Proceso proceso, String permiso) {

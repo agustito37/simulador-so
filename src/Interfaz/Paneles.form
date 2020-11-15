@@ -680,7 +680,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel10">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Peso:"/>
+                    <Property name="text" type="java.lang.String" value="Tiempo:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="pesoTxt">
