@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import Simulador.Proceso;
 import Simulador.Programa;
 import Simulador.Operacion;
+import Simulador.Permisos;
 import Simulador.Recurso;
 import Simulador.SistemaOperativo;
 import Simulador.Usuario;
@@ -89,8 +90,19 @@ public class Paneles extends JFrame {
         OperacionesTable.setModel(operaciones);
         UsuariosTable.setModel(usuarios);
         RecursosTable.setModel(recursos);
+        setPermisosComboModel();
         refrescarProgramas();
         refrescarLogueados();
+    }
+    
+    private void setPermisosComboModel() {
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        comboModel.addElement(Permisos.Minimo);
+        comboModel.addElement(Permisos.Intermedio);
+        comboModel.addElement(Permisos.Maximo);
+        permisoProgramaCombo.setModel(comboModel);
+        permisoRecursosCombo.setModel(comboModel);
+        permisoCombo.setModel(comboModel);
     }
     
     private void refrescarProgramas() {
@@ -423,7 +435,6 @@ public class Paneles extends JFrame {
 
         jLabel12.setText("Permiso:");
 
-        permisoProgramaCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Minimo", "Intermedio", "Maximo" }));
         permisoProgramaCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 permisoProgramaComboActionPerformed(evt);
@@ -617,7 +628,6 @@ public class Paneles extends JFrame {
             }
         });
 
-        permisoRecursosCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Minimo", "Intermedio", "Maximo" }));
         permisoRecursosCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 permisoRecursosComboActionPerformed(evt);
@@ -712,7 +722,6 @@ public class Paneles extends JFrame {
             }
         });
 
-        permisoCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Minimo", "Intermedio", "Maximo" }));
         permisoCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 permisoComboActionPerformed(evt);
@@ -856,8 +865,8 @@ public class Paneles extends JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String operacionText = OperacionTxt.getText();
-        String permisoText = (String)permisoProgramaCombo.getSelectedItem();
-        Programa programa = new Programa(operacionText, permisoText);
+        Permisos permiso = (Permisos)permisoProgramaCombo.getSelectedItem();
+        Programa programa = new Programa(operacionText, permiso);
         programas.addRow(programa);
         refrescarProgramas();
         ProgramasTable.updateUI();
@@ -898,7 +907,7 @@ public class Paneles extends JFrame {
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         String nombre = usuarioTxt.getText();
-        String permiso = (String)permisoCombo.getSelectedItem();
+        Permisos permiso = (Permisos)permisoCombo.getSelectedItem();
         Usuario usuario = new Usuario(nombre, permiso);
         usuarios.addRow(usuario);
         UsuariosTable.updateUI();
@@ -938,7 +947,7 @@ public class Paneles extends JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         String id = recursoTxt.getText();
-        String permiso = (String)permisoRecursosCombo.getSelectedItem();
+        Permisos permiso = (Permisos)permisoRecursosCombo.getSelectedItem();
         Recurso recurso = new Recurso(id, permiso);
         recursos.addRow(recurso);
         RecursosTable.updateUI();
@@ -1047,9 +1056,9 @@ public class Paneles extends JFrame {
     private javax.swing.JTextField operacionTxt;
     private javax.swing.JTextField operacionesCiclo;
     private javax.swing.JTextField operacionesDelay;
-    private javax.swing.JComboBox<String> permisoCombo;
-    private javax.swing.JComboBox<String> permisoProgramaCombo;
-    private javax.swing.JComboBox<String> permisoRecursosCombo;
+    private javax.swing.JComboBox<Permisos> permisoCombo;
+    private javax.swing.JComboBox<Permisos> permisoProgramaCombo;
+    private javax.swing.JComboBox<Permisos> permisoRecursosCombo;
     private javax.swing.JTextField pesoTxt;
     private javax.swing.JTextField quantumTxt;
     private javax.swing.JTextField recursoTxt;

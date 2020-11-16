@@ -17,9 +17,9 @@ public class Programa implements Iterator<String>, Serializable, Permisible {
     private String[] operaciones;
     public String cadena;
     private int linea;
-    private String permiso;
+    private Permisos permiso;
     
-    public Programa(String pCadena, String permisoUsuario) {
+    public Programa(String pCadena, Permisos permisoUsuario) {
         linea = -1;
         cadena = pCadena;
         operaciones = cadena.split(DELIMITADORES);
@@ -47,11 +47,11 @@ public class Programa implements Iterator<String>, Serializable, Permisible {
     
     @Override
     public String toString(){
-        return cadena;
+        return cadena + " - " + permiso;
     }
     
     @Override
-    public String obtenerPermiso() {
+    public Permisos obtenerPermiso() {
         return permiso;
     }
 }

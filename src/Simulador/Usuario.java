@@ -9,10 +9,10 @@ import java.io.Serializable;
  */
 public class Usuario implements Serializable, Permisible {
     public String idUsuario;
-    private String permiso;
+    private Permisos permiso;
     
     //tipos de usario: todos los servicios, servicios basicos, servicios escenciales
-    public Usuario (String pIdUsuario, String pPermiso){
+    public Usuario (String pIdUsuario, Permisos pPermiso){
         idUsuario = pIdUsuario;
         permiso = pPermiso;
     }  
@@ -23,7 +23,7 @@ public class Usuario implements Serializable, Permisible {
     }
     
     @Override
-    public String obtenerPermiso() {
+    public Permisos obtenerPermiso() {
         return permiso;
     }
 }

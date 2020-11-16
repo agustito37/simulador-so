@@ -11,17 +11,17 @@ import java.util.LinkedList;
 public class Recurso implements Serializable, Permisible {
     public String idRecurso;
     private Queue<Proceso> procesos;
-    private String permiso;
+    private Permisos permiso;
 
     
-    public Recurso(String unRecurso, Proceso proceso, String pPermiso) {
+    public Recurso(String unRecurso, Proceso proceso, Permisos pPermiso) {
         procesos = new LinkedList();
         procesos.add(proceso);
         idRecurso = unRecurso;
         permiso = pPermiso;
     }
     
-    public Recurso(String unRecurso, String pPermiso) {
+    public Recurso(String unRecurso, Permisos pPermiso) {
         procesos = new LinkedList();
         idRecurso = unRecurso;
         permiso = pPermiso;
@@ -44,7 +44,7 @@ public class Recurso implements Serializable, Permisible {
     }
     
     @Override
-    public String obtenerPermiso() {
+    public Permisos obtenerPermiso() {
         return permiso;
     }
 }

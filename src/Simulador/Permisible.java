@@ -10,5 +10,5 @@ package Simulador;
  * @author agustin
  */
 public interface Permisible {
-    public String obtenerPermiso();
+    public Permisos obtenerPermiso();
 }
