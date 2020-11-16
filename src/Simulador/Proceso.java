@@ -47,22 +47,41 @@ public class Proceso implements Serializable {
             
             String output = "Proceso " + this.id + ": " + instruccion;
             if(esRecursoSolicitar(instruccion)){
+                boolean obtenido;
                 output += " solicitado";
                 
+                try {
+                    obtenido = administrador.solicitar(instruccion, this, logueado);
+                } catch(InexistenteException | DenegadoException ex) {
+                    GUIInterface.write(output);
+                    GUIInterface.write("Proceso " + this.id + ": " + ex.getMessage());
+                    sistema.transicion(Transicion.terminar, this);
+                    return;
+                }
+                
                 // si estoy solicitando un recurso y no está disponible, lo bloqueo
-                if(!administrador.solicitar(instruccion, this)){
+                if (!obtenido) {
                     output += " (en uso)";
                     GUIInterface.write(output);
-                    
+
                     programa.back();
                     sistema.transicion(Transicion.bloquear, this);
-                    
+
                     return;
-                } 
+                }
             }
             // si estoy devolviendo un recurso, desbloqueo el siguiente en la cola de espera
             else if(esRecursoDevolver(instruccion)){
-                Proceso siguienteProceso = administrador.devolver(instruccion, this);
+                Proceso siguienteProceso;
+                        
+                try {
+                    siguienteProceso = administrador.devolver(instruccion, this, logueado);
+                } catch(InexistenteException | DenegadoException ex) {
+                    GUIInterface.write(output);
+                    GUIInterface.write("Proceso " + this.id + ": " + ex.getMessage());
+                    sistema.transicion(Transicion.terminar, this);
+                    return;
+                }
                 
                 output += " devuelto";
                 GUIInterface.write(output);
@@ -87,16 +106,12 @@ public class Proceso implements Serializable {
         sistema.transicion(Transicion.timeout, this);
     }
     
-    public boolean esRecurso(String instruccion){
-        return instruccion.contains("R");
-    }
-    
     public boolean esRecursoSolicitar(String instruccion){
-        return esRecurso(instruccion) && instruccion.contains("S");
+        return instruccion.contains("RS");
     }
      
     public boolean esRecursoDevolver(String instruccion){
-        return esRecurso(instruccion) && instruccion.contains("D");
+        return instruccion.contains("RD");
     }
     
     @Override

@@ -7,9 +7,9 @@ import java.io.Serializable;
  *
  * @author Mauro
  */
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, Permisible {
     public String idUsuario;
-    public String permiso;
+    private String permiso;
     
     //tipos de usario: todos los servicios, servicios basicos, servicios escenciales
     public Usuario (String pIdUsuario, String pPermiso){
@@ -20,5 +20,10 @@ public class Usuario implements Serializable {
     @Override
     public String toString(){
         return idUsuario;
+    }
+    
+    @Override
+    public String obtenerPermiso() {
+        return permiso;
     }
 }

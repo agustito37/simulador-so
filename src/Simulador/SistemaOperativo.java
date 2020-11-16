@@ -34,10 +34,9 @@ public class SistemaOperativo implements Transicionable {
         ejecutando = new Ejecutando();
         bloqueado = new Bloqueado();
         listo = new Listo();
-        administradorRecursos = new AdministradorRecursos();
+        administradorRecursos = new AdministradorRecursos(pRecursos);
         procesos = pProcesos;
         operaciones = pOperaciones;
-        recursos = pRecursos;
     }
     
     public void iniciar() {
@@ -104,8 +103,8 @@ public class SistemaOperativo implements Transicionable {
                 Proceso proceso = procesosAEjecutar.next();
                 
                 // chequeo si tiene permisos para ejecutar el programa
-                if(!proceso.programa.permiso.equals(logueado.permiso)){
-                    GUIInterface.write("Error: permisos insuficientes.");
+                if(!Permisos.tieneAcceso(logueado, proceso.programa)){
+                    GUIInterface.write("Proceso " + proceso + ": Error - permisos insuficientes");
                     this.transicion(Transicion.terminar, proceso);
                     continue;
                 }

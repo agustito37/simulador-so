@@ -44,7 +44,7 @@ public class UsuariosTableModel extends AbstractTableModel{
          temp = lista.get(row).idUsuario;
       }
       else if (col == 1) {
-         temp = lista.get(row).permiso;
+         temp = lista.get(row).obtenerPermiso();
       }
       
       return temp;

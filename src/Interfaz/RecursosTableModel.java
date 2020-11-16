@@ -44,7 +44,7 @@ public class RecursosTableModel extends AbstractTableModel{
          temp = lista.get(row).idRecurso;
       }
       else if (col == 1) {
-         temp = lista.get(row).permiso;
+         temp = lista.get(row).obtenerPermiso();
       }
       
       return temp;

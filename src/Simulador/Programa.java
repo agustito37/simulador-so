@@ -12,12 +12,12 @@ import java.util.Iterator;
  *
  * @author agustin
  */
-public class Programa implements Iterator<String>, Serializable {
+public class Programa implements Iterator<String>, Serializable, Permisible {
     private final String DELIMITADORES = "\\s+|\\r?\\n+";
     private String[] operaciones;
     public String cadena;
     private int linea;
-    public String permiso;
+    private String permiso;
     
     public Programa(String pCadena, String permisoUsuario) {
         linea = -1;
@@ -48,5 +48,10 @@ public class Programa implements Iterator<String>, Serializable {
     @Override
     public String toString(){
         return cadena;
+    }
+    
+    @Override
+    public String obtenerPermiso() {
+        return permiso;
     }
 }

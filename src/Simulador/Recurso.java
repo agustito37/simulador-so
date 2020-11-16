@@ -8,10 +8,10 @@ import java.util.LinkedList;
  *
  * @author Mauro
  */
-public class Recurso implements Serializable {
+public class Recurso implements Serializable, Permisible {
     public String idRecurso;
     private Queue<Proceso> procesos;
-    public String permiso;
+    private String permiso;
 
     
     public Recurso(String unRecurso, Proceso proceso, String pPermiso) {
@@ -41,5 +41,10 @@ public class Recurso implements Serializable {
 
     public boolean estaDisponible() {
         return this.procesos.isEmpty();
+    }
+    
+    @Override
+    public String obtenerPermiso() {
+        return permiso;
     }
 }
