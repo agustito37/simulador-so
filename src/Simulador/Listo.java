@@ -36,4 +36,32 @@ public class Listo implements Estado {
         // clonar para evitar modificación concurrente del iterador
         return (new ArrayList(procesos)).iterator();
     }
+    
+    public Iterator<Proceso> obtenerProcesosPriorizados(int ciclo, int schedulingFilaBaja) {
+        // cola de prioridad de 2 niveles
+        if (ciclo % schedulingFilaBaja == 0) {
+            return obtenerIteradorDePrioridad(Prioridad.baja);
+        } else {
+            return obtenerIteradorDePrioridad(Prioridad.alta);
+        }
+    }
+    
+    public Iterator<Proceso> obtenerIteradorDePrioridad(Prioridad prioridad) {
+        ArrayList<Proceso> priorizada = new ArrayList();
+        
+        for (int x = 0; x < procesos.size(); x += 1) {
+            Proceso actual = procesos.get(x);
+            
+            if (actual.prioridad == prioridad) {
+                priorizada.add(actual);
+            }
+        }
+        
+        // si no tiene elementos, retorno todos los procesos para que agarre el siguiente
+        if (priorizada.isEmpty()) {
+            return obtenerProcesos();
+        }
+        
+        return priorizada.iterator();
+    }
 }

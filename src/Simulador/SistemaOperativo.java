@@ -15,21 +15,19 @@ import java.util.List;
  */
 public class SistemaOperativo implements Transicionable {
     private int quantum;
-    private int operacionesCiclo;
     private int operacionesDelay;
+    private int schedulingFilaBaja;
     private Usuario logueado;
     private Estado ejecutando;
     private Estado bloqueado;
-    private Estado listo;
+    private Listo listo;
     public AdministradorRecursos administradorRecursos;
     private List<Proceso> procesos;
     private List<Operacion> operaciones;
-    private List<Recurso> recursos;
     
-    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, List<Recurso> pRecursos, int pQuantum, int pOperacionesCiclo, int pOperacionesDelay) {
+    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, List<Recurso> pRecursos, int pQuantum, int pOperacionesDelay, int pSchedulingBaja) {
         logueado = pLogueado;
         quantum = pQuantum;
-        operacionesCiclo = pOperacionesCiclo;
         operacionesDelay = pOperacionesDelay;
         ejecutando = new Ejecutando();
         bloqueado = new Bloqueado();
@@ -37,6 +35,7 @@ public class SistemaOperativo implements Transicionable {
         administradorRecursos = new AdministradorRecursos(pRecursos);
         procesos = pProcesos;
         operaciones = pOperaciones;
+        schedulingFilaBaja = pSchedulingBaja;
     }
     
     public void iniciar() {
@@ -55,7 +54,8 @@ public class SistemaOperativo implements Transicionable {
         switch (transicion) {
             case comenzar:
                 listo.agregarProceso(proceso);
-                output += "comenzado";
+                proceso.prioridad = Prioridad.alta;
+                output += "comenzado (prioridad alta)";
                 break;
             case terminar:
                 ejecutando.quitarProceso(proceso);
@@ -68,18 +68,20 @@ public class SistemaOperativo implements Transicionable {
                 break;
             case despertar:
                 bloqueado.quitarProceso(proceso);
+                proceso.prioridad = Prioridad.alta;
                 listo.agregarProceso(proceso);
-                output += "despertado";
+                output += "despertado (prioridad alta)";
                 break;
             case timeout:
                 ejecutando.quitarProceso(proceso);
+                proceso.prioridad = Prioridad.baja;
                 listo.agregarProceso(proceso);
-                output += "timeout";
+                output += "timeout (prioridad baja)";
                 break;
             case despachar:
                 listo.quitarProceso(proceso);
                 ejecutando.agregarProceso(proceso);
-                output += "despachado";
+                output += "despachado (prioridad " + proceso.prioridad.toString() + ")";
                 break;
             default:
                 break;
@@ -88,10 +90,14 @@ public class SistemaOperativo implements Transicionable {
     }
     
     public synchronized void ejecutar() throws InterruptedException {
+        int tickActual = 0;
+                
         // mientras tenga procesos que ejecutar
         while(true) {
-            // despacho procesos según cantidad de núcleos
-            Iterator<Proceso> procesosListos = listo.obtenerProcesos();
+            tickActual += 1;
+            
+            // despacho procesos según su prioridad
+            Iterator<Proceso> procesosListos = listo.obtenerProcesosPriorizados(tickActual, schedulingFilaBaja);
 
             if (procesosListos.hasNext()) {
                 transicion(Transicion.despachar, procesosListos.next());
@@ -109,7 +115,7 @@ public class SistemaOperativo implements Transicionable {
                     continue;
                 }
                 
-                proceso.ejecutarPrograma(this, administradorRecursos, quantum, operaciones, operacionesCiclo, operacionesDelay, logueado);
+                proceso.ejecutarPrograma(this, administradorRecursos, quantum, operaciones, operacionesDelay, logueado);
             }
             
             // chequeo estado del sistema operativo

@@ -3,12 +3,14 @@ package Simulador;
 import Interfaz.GUIInterface;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Random;
 
 public class Proceso implements Serializable {
     public static int ultimoId = 0;
     public int id;
     private int linea;
     public Programa programa;
+    public Prioridad prioridad;
     
     public Proceso() {
         Proceso.ultimoId += 1;
@@ -20,7 +22,7 @@ public class Proceso implements Serializable {
         this.programa = programa;
     }
     
-    public int obtenerPeso(List<Operacion> operaciones, String operacion) {
+    public int obtenerPeso(List<Operacion> operaciones, String operacion, int quantum) {
         for (int x = 0; x < operaciones.size(); x += 1) {
             Operacion actual = operaciones.get(x);
             
@@ -29,12 +31,13 @@ public class Proceso implements Serializable {
             }
         }
         
-        return 0;
+        Random random = new Random();
+        return random.nextInt(quantum) + 1;
     }
     
     public synchronized void ejecutarPrograma(
             Transicionable sistema, AdministradorRecursos administrador, int quantum, List<Operacion> operaciones, 
-            int operacionesCiclo, int operacionesDelay, Usuario logueado
+            int operacionesDelay, Usuario logueado
     ) throws InterruptedException {
         int suma = 0;
         
@@ -43,9 +46,9 @@ public class Proceso implements Serializable {
             linea += 1;
             
             String instruccion = programa.next();
-            suma += obtenerPeso(operaciones, instruccion);
+            suma += obtenerPeso(operaciones, instruccion, quantum);
             
-            String output = "Proceso " + this.id + ": " + instruccion;
+            String output = "Proceso " + this.id + ": " + instruccion + " (" + suma + ")";
             if(esRecursoSolicitar(instruccion)){
                 boolean obtenido;
                 output += " solicitado";

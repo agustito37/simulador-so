@@ -137,8 +137,6 @@ public class Paneles extends JFrame {
         Paneles = new javax.swing.JTabbedPane();
         Sistema = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        operacionesCiclo = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         operacionesDelay = new javax.swing.JTextField();
         jButton7 = new javax.swing.JButton();
@@ -146,6 +144,8 @@ public class Paneles extends JFrame {
         quantumTxt = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         LogueadoCombo = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
+        schedulingBaja = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         OutputTxt = new javax.swing.JTextArea();
         Iniciar = new javax.swing.JButton();
@@ -206,10 +206,6 @@ public class Paneles extends JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(" Configuración "));
 
-        jLabel2.setText("Operaciones/Ciclo:");
-
-        operacionesCiclo.setText("4");
-
         jLabel5.setText("Operaciones/Delay:");
 
         operacionesDelay.setText("0");
@@ -223,7 +219,7 @@ public class Paneles extends JFrame {
 
         jLabel6.setText("Quantum:");
 
-        quantumTxt.setText("100");
+        quantumTxt.setText("10");
         quantumTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quantumTxtActionPerformed(evt);
@@ -232,36 +228,43 @@ public class Paneles extends JFrame {
 
         jLabel9.setText("Usuario logueado:");
 
+        jLabel15.setText("Scheduling/Baja:");
+        jLabel15.setToolTipText("");
+
+        schedulingBaja.setText("4");
+        schedulingBaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                schedulingBajaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(10, 10, 10)
-                                    .addComponent(jLabel9))
-                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(quantumTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(LogueadoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 692, Short.MAX_VALUE))
-                            .addComponent(operacionesCiclo)))
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel9))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(quantumTxt, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton7)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(LogueadoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(schedulingBaja))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton7)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -273,16 +276,16 @@ public class Paneles extends JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(quantumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(operacionesCiclo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel15)
+                    .addComponent(schedulingBaja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(operacionesDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton7))
-                .addGap(50, 50, 50))
+                .addGap(111, 111, 111))
         );
 
         OutputTxt.setEditable(false);
@@ -331,9 +334,9 @@ public class Paneles extends JFrame {
         SistemaLayout.setVerticalGroup(
             SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SistemaLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(SistemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Iniciar)
@@ -527,7 +530,7 @@ public class Paneles extends JFrame {
 
         jLabel10.setText("Tiempo:");
 
-        pesoTxt.setText("100");
+        pesoTxt.setText("1");
         pesoTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pesoTxtActionPerformed(evt);
@@ -849,11 +852,11 @@ public class Paneles extends JFrame {
                 GUIInterface.write("Sistema Operativo iniciado");
                 
                 int quantum = Integer.parseInt(quantumTxt.getText());
-                int cantOperaciones = Integer.parseInt(operacionesCiclo.getText());
                 int delayOperaciones = Integer.parseInt(operacionesDelay.getText());
+                int schedulingFilaBaja = Integer.parseInt(schedulingBaja.getText());
                 Usuario logueado = (Usuario)LogueadoCombo.getSelectedItem();
                 
-                sistema = new SistemaOperativo(logueado, procesos.toList(), operaciones.toList(), recursos.toList(), quantum, cantOperaciones, delayOperaciones);
+                sistema = new SistemaOperativo(logueado, procesos.toList(), operaciones.toList(), recursos.toList(), quantum, delayOperaciones, schedulingFilaBaja);
                 sistema.iniciar();
                 sistema.ejecutar();
             } catch (InterruptedException ex) {
@@ -961,6 +964,10 @@ public class Paneles extends JFrame {
         recursos.removeRow(RecursosTable.getSelectedRow());
         RecursosTable.updateUI();
     }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void schedulingBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_schedulingBajaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_schedulingBajaActionPerformed
  
     /**
      * @param args the command line arguments
@@ -1028,7 +1035,7 @@ public class Paneles extends JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1054,7 +1061,6 @@ public class Paneles extends JFrame {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTextField operacionTxt;
-    private javax.swing.JTextField operacionesCiclo;
     private javax.swing.JTextField operacionesDelay;
     private javax.swing.JComboBox<Permisos> permisoCombo;
     private javax.swing.JComboBox<Permisos> permisoProgramaCombo;
@@ -1062,6 +1068,7 @@ public class Paneles extends JFrame {
     private javax.swing.JTextField pesoTxt;
     private javax.swing.JTextField quantumTxt;
     private javax.swing.JTextField recursoTxt;
+    private javax.swing.JTextField schedulingBaja;
     private javax.swing.JTextField usuarioTxt;
     // End of variables declaration//GEN-END:variables
 }
