@@ -15,7 +15,7 @@ import Simulador.Programa;
  * @author agustin
  */
 public class ProgramasTableModel extends AbstractTableModel{
-   private final String[] columnNames = { "Programa", "Permiso" };
+   private final String[] columnNames = { "Programa", "Memoria", "Permiso" };
    public List<Programa> lista;
    
    public ProgramasTableModel() {
@@ -40,12 +40,19 @@ public class ProgramasTableModel extends AbstractTableModel{
    public Object getValueAt(int row, int col) {
       Object temp = null;
       
-      if (col == 0) {
-         temp = lista.get(row).cadena;
-      }
-      else if (col == 1) {
-         temp = lista.get(row).obtenerPermiso();
-      }
+       switch (col) {
+           case 0:
+               temp = lista.get(row).cadena;
+               break;
+           case 1:
+               temp = lista.get(row).memoria;
+               break;
+           case 2:
+               temp = lista.get(row).obtenerPermiso();
+               break;
+           default:
+               break;
+       }
       
       return temp;
    }

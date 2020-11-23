@@ -16,7 +16,7 @@ import java.util.List;
 public class SistemaOperativo implements Transicionable {
     private int quantum;
     private int operacionesDelay;
-    private int schedulingFilaBaja;
+    private int schedulingFactor;
     private Usuario logueado;
     private Estado ejecutando;
     private Estado bloqueado;
@@ -24,28 +24,24 @@ public class SistemaOperativo implements Transicionable {
     public AdministradorRecursos administradorRecursos;
     private List<Proceso> procesos;
     private List<Operacion> operaciones;
+    private AdministradorMemoria administradorMemoria;
     
-    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, List<Recurso> pRecursos, int pQuantum, int pOperacionesDelay, int pSchedulingBaja) {
-        logueado = pLogueado;
-        quantum = pQuantum;
-        operacionesDelay = pOperacionesDelay;
+    public SistemaOperativo(Usuario pLogueado, List<Proceso> pProcesos, List<Operacion> pOperaciones, List<Recurso> pRecursos, int pQuantum, int pOperacionesDelay, int pSchedulingFactor, int pMemoriaIncial) {
         ejecutando = new Ejecutando();
         bloqueado = new Bloqueado();
         listo = new Listo();
-        administradorRecursos = new AdministradorRecursos(pRecursos);
+        schedulingFactor = pSchedulingFactor;
+        logueado = pLogueado;
+        quantum = pQuantum;
+        operacionesDelay = pOperacionesDelay;
         procesos = pProcesos;
         operaciones = pOperaciones;
-        schedulingFilaBaja = pSchedulingBaja;
+        administradorRecursos = new AdministradorRecursos(pRecursos);
+        administradorMemoria = new AdministradorMemoria(pMemoriaIncial);
     }
     
     public void iniciar() {
-        for (int x = 0; x < procesos.size(); x++) {
-            // clono proceso y programa para no reutilizarlo cada vez que se inicia el sistema operativo
-            Proceso proceso = procesos.get(x).nuevo();
-            proceso.setearPrograma(proceso.programa.nuevo());
-            
-            transicion(Transicion.comenzar, proceso);
-        }
+        administradorMemoria.pedirMemoria(procesos);
     }
     
     @Override
@@ -59,6 +55,7 @@ public class SistemaOperativo implements Transicionable {
                 break;
             case terminar:
                 ejecutando.quitarProceso(proceso);
+                administradorMemoria.liberarMemoria(proceso);
                 output += "terminado";
                 break;
             case bloquear:
@@ -96,8 +93,18 @@ public class SistemaOperativo implements Transicionable {
         while(true) {
             tickActual += 1;
             
+            // chequeo si tengo procesos para comenzar, los traigo si hay memoria disponible
+            List<Proceso> procesosAsignados = administradorMemoria.procesosAsignados();
+            for (int x = 0; x < procesosAsignados.size(); x++) {
+                // clono proceso y programa para no reutilizarlo cada vez que comienza
+                Proceso proceso = procesosAsignados.get(x).nuevo();
+                proceso.setearPrograma(proceso.programa.nuevo());
+
+                transicion(Transicion.comenzar, proceso);
+            }
+            
             // despacho procesos según su prioridad
-            Iterator<Proceso> procesosListos = listo.obtenerProcesosPriorizados(tickActual, schedulingFilaBaja);
+            Iterator<Proceso> procesosListos = listo.obtenerProcesosPriorizados(tickActual, schedulingFactor);
 
             if (procesosListos.hasNext()) {
                 transicion(Transicion.despachar, procesosListos.next());
@@ -118,8 +125,8 @@ public class SistemaOperativo implements Transicionable {
                 proceso.ejecutarPrograma(this, administradorRecursos, quantum, operaciones, operacionesDelay, logueado);
             }
             
-            // chequeo estado del sistema operativo
-            if (listo.estaVacio()) {
+            // chequeo estado del sistema operativo si no hay proceso pendientes para asignar
+            if (administradorMemoria.estaVacio() && listo.estaVacio()) {
                 if (bloqueado.estaVacio()) {
                     GUIInterface.write("Nada más que ejecutar");
                     break;

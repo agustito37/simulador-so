@@ -18,16 +18,18 @@ public class Programa implements Iterator<String>, Serializable, Permisible {
     public String cadena;
     private int linea;
     private Permisos permiso;
+    public int memoria;
     
-    public Programa(String pCadena, Permisos permisoUsuario) {
+    public Programa(String pCadena, Permisos permisoUsuario, int pMemoria) {
         linea = -1;
         cadena = pCadena;
         operaciones = cadena.split(DELIMITADORES);
         permiso = permisoUsuario;
+        memoria = pMemoria;
     }
     
     public Programa nuevo( ) {
-        return new Programa(this.cadena, this.permiso);
+        return new Programa(this.cadena, this.permiso, this.memoria);
     }
     
     public void back() {
@@ -47,7 +49,7 @@ public class Programa implements Iterator<String>, Serializable, Permisible {
     
     @Override
     public String toString(){
-        return cadena + " - " + permiso;
+        return cadena + " - " + memoria + " bytes - " + permiso;
     }
     
     @Override
