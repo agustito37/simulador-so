@@ -34,7 +34,7 @@ public class AdministradorMemoria {
             if (memoriaDisponible - proceso.programa.memoria >= 0) {
                 aProcesar.add(proceso);
                 memoriaDisponible -= proceso.programa.memoria;
-                GUIInterface.write("Administrador de memoria: proceso " + proceso.id + " asignado (" + proceso.programa.memoria + " bytes) - " + memoriaDisponible + " bytes disponibles");
+                GUIInterface.write("Administrador de memoria: proceso " + proceso + " asignado (" + proceso.programa.memoria + " bytes) - " + memoriaDisponible + " bytes disponibles");
             } else {
                 break;
             }
@@ -52,7 +52,7 @@ public class AdministradorMemoria {
             Proceso proceso = pProcesos.get(x);
             
             if (proceso.programa.memoria > memoriaInicial) {
-                GUIInterface.write("Administrador de memoria: memoria insuficiente para el proceso " + proceso.id + " (" + proceso.programa.memoria + " bytes) - ignorado");
+                GUIInterface.write("Administrador de memoria: memoria insuficiente para el proceso " + proceso + " (" + proceso.programa.memoria + " bytes) - ignorado");
                 continue;
             }
             
@@ -62,7 +62,7 @@ public class AdministradorMemoria {
     
     public void liberarMemoria(Proceso proceso) {
         memoriaDisponible += proceso.programa.memoria;
-        GUIInterface.write("Administrador de memoria: proceso " + proceso.id + " liberado (" + proceso.programa.memoria + " bytes) - " + memoriaDisponible + " bytes disponibles");
+        GUIInterface.write("Administrador de memoria: proceso " + proceso + " liberado (" + proceso.programa.memoria + " bytes) - " + memoriaDisponible + " bytes disponibles");
     }
     
     public boolean estaVacio() {

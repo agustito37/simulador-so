@@ -36,4 +36,15 @@ public class Bloqueado implements Estado {
         // clonar para evitar modificación concurrente del iterador
         return (new ArrayList(procesos)).iterator();
     }
+    
+    public Proceso desencolar() {
+        Proceso siguiente = null;
+        
+        if (!procesos.isEmpty()) {
+            siguiente = procesos.get(0);
+            procesos.remove(siguiente);
+        }
+        
+        return siguiente;
+    }
 }

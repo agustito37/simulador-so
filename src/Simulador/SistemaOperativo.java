@@ -18,8 +18,8 @@ public class SistemaOperativo implements Transicionable {
     private int operacionesDelay;
     private int schedulingFactor;
     private Usuario logueado;
-    private Estado ejecutando;
-    private Estado bloqueado;
+    private Ejecutando ejecutando;
+    private Bloqueado bloqueado;
     private Listo listo;
     public AdministradorRecursos administradorRecursos;
     private List<Proceso> procesos;
@@ -55,6 +55,7 @@ public class SistemaOperativo implements Transicionable {
                 break;
             case terminar:
                 ejecutando.quitarProceso(proceso);
+                administradorRecursos.devolverRecursosProceso(proceso, this);
                 administradorMemoria.liberarMemoria(proceso);
                 output += "terminado";
                 break;
@@ -105,7 +106,6 @@ public class SistemaOperativo implements Transicionable {
             
             // despacho procesos según su prioridad
             Iterator<Proceso> procesosListos = listo.obtenerProcesosPriorizados(tickActual, schedulingFactor);
-
             if (procesosListos.hasNext()) {
                 transicion(Transicion.despachar, procesosListos.next());
             }
@@ -128,11 +128,15 @@ public class SistemaOperativo implements Transicionable {
             // chequeo estado del sistema operativo si no hay proceso pendientes para asignar
             if (administradorMemoria.estaVacio() && listo.estaVacio()) {
                 if (bloqueado.estaVacio()) {
-                    GUIInterface.write("Nada más que ejecutar");
+                    GUIInterface.write("Sistema operativo: finalizado");
                     break;
                 } else {
-                    GUIInterface.write("Quedan procesos bloqueados");
-                    wait(operacionesDelay == 0 ? 0 : 1000);
+                    GUIInterface.write("Sistema operativo: deadlock");
+                    
+                    // quito el primer proceso de la lista para evitar deadlock
+                    Proceso proceso = bloqueado.desencolar();
+                    GUIInterface.write("Proceso " + proceso + ": matado");
+                    transicion(Transicion.terminar, proceso);
                 }
             }
         }

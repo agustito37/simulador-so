@@ -12,7 +12,6 @@ public class Recurso implements Serializable, Permisible {
     public String idRecurso;
     private Queue<Proceso> procesos;
     private Permisos permiso;
-
     
     public Recurso(String unRecurso, Proceso proceso, Permisos pPermiso) {
         procesos = new LinkedList();
@@ -46,5 +45,13 @@ public class Recurso implements Serializable, Permisible {
     @Override
     public Permisos obtenerPermiso() {
         return permiso;
+    }
+    
+    public void eliminarDeCola(Proceso proceso) {
+        procesos.remove(proceso);
+    }
+    
+    public Recurso nuevo() {
+        return new Recurso(this.idRecurso, this.permiso);
     }
 }

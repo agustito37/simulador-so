@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Simulador;
+package Excepciones;
 
 /**
  *
  * @author agustin
  */
-public class DenegadoException extends Exception { 
-    public DenegadoException(String errorMessage) {
+public class InexistenteException extends Exception { 
+    public InexistenteException(String errorMessage) {
         super(errorMessage);
     }
 }

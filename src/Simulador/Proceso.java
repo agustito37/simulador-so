@@ -1,5 +1,7 @@
 package Simulador;
 
+import Excepciones.InexistenteException;
+import Excepciones.DenegadoException;
 import Interfaz.GUIInterface;
 import java.io.Serializable;
 import java.util.List;
@@ -48,7 +50,7 @@ public class Proceso implements Serializable {
             String instruccion = programa.next();
             suma += obtenerPeso(operaciones, instruccion, quantum);
             
-            String output = "Proceso " + this.id + ": " + instruccion + " (" + suma + ")";
+            String output = "Proceso " + this + ": " + instruccion + " (" + suma + ")";
             if(esRecursoSolicitar(instruccion)){
                 boolean obtenido;
                 output += " solicitado";
@@ -57,7 +59,7 @@ public class Proceso implements Serializable {
                     obtenido = administrador.solicitar(instruccion, this, logueado);
                 } catch(InexistenteException | DenegadoException ex) {
                     GUIInterface.write(output);
-                    GUIInterface.write("Proceso " + this.id + ": " + ex.getMessage());
+                    GUIInterface.write("Proceso " + this + ": " + ex.getMessage());
                     sistema.transicion(Transicion.terminar, this);
                     return;
                 }
@@ -81,7 +83,7 @@ public class Proceso implements Serializable {
                     siguienteProceso = administrador.devolver(instruccion, this, logueado);
                 } catch(InexistenteException | DenegadoException ex) {
                     GUIInterface.write(output);
-                    GUIInterface.write("Proceso " + this.id + ": " + ex.getMessage());
+                    GUIInterface.write("Proceso " + this + ": " + ex.getMessage());
                     sistema.transicion(Transicion.terminar, this);
                     return;
                 }

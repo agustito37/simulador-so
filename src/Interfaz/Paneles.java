@@ -877,9 +877,9 @@ public class Paneles extends JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (thread != null) {
             thread.interrupt();
-            GUIInterface.write("Sistema Operativo detenido");
+            GUIInterface.write("Sistema Operativo: detenido");
         } else {
-            GUIInterface.write("Sistema Operativo no ha sido iniciado");
+            GUIInterface.write("Sistema Operativo: no ha sido iniciado");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -889,7 +889,7 @@ public class Paneles extends JFrame {
         }
         thread = new Thread(() -> {
             try {
-                GUIInterface.write("Sistema Operativo iniciado");
+                GUIInterface.write("Sistema Operativo: iniciado");
                 
                 int quantum = Integer.parseInt(quantumTxt.getText());
                 int delayOperaciones = Integer.parseInt(operacionesDelay.getText());

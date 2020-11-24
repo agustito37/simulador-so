@@ -1,6 +1,8 @@
 package Simulador;
 
-import java.util.HashMap;
+import Excepciones.InexistenteException;
+import Excepciones.DenegadoException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,22 +10,36 @@ import java.util.List;
  * @author Mauro
  */
 public class AdministradorRecursos {
-    private HashMap<String, Recurso> recursos;
+    private List<Recurso> recursos;
 
-    public AdministradorRecursos(List<Recurso> pRecursos){
-        recursos = new HashMap();
-        for (int x = 0; x < pRecursos.size(); x += 1) {
-            Recurso recurso = pRecursos.get(x);
-            recursos.put(recurso.idRecurso, recurso);
+    public AdministradorRecursos(List<Recurso> pRecursos) {
+        recursos = new ArrayList();
+        
+        for (int x = 0; x < pRecursos.size(); x++) {
+            // genera nuevo recurso para reinicar estado
+            recursos.add(pRecursos.get(x).nuevo());
         }
+    }
+    
+    private Recurso obtenerRecurso(String id) {
+        Recurso recurso = null;
+        
+        for (int x = 0; x < recursos.size(); x++) {
+            Recurso actual = recursos.get(x);
+            
+            if (actual.idRecurso.equals(id)) {
+                return actual;
+            }
+        }
+        
+        return recurso;
     }
 
     public boolean solicitar (String idRecurso, Proceso proceso, Usuario logueado) throws InexistenteException, DenegadoException {
         String id = idRecurso.replaceFirst("RS", "");
-
-        if(recursos.containsKey(id)){
-            Recurso recurso = recursos.get(id);
-            
+        
+        Recurso recurso = obtenerRecurso(id);
+        if(recurso != null){
             if (!Permisos.tieneAcceso(logueado, recurso)) {
                 throw new DenegadoException("Error - permisos insuficientes");
             }
@@ -46,9 +62,8 @@ public class AdministradorRecursos {
     public Proceso devolver (String idRecurso, Proceso proceso, Usuario logueado) throws InexistenteException, DenegadoException{
         String id = idRecurso.replaceFirst("RD", "");
         
-        if(recursos.containsKey(id)){
-            Recurso recurso = recursos.get(id);
-            
+        Recurso recurso = obtenerRecurso(id);
+        if(recurso != null){
             if (!Permisos.tieneAcceso(logueado, recurso)) {
                 throw new DenegadoException("Error - permisos insuficientes");
             }
@@ -62,6 +77,26 @@ public class AdministradorRecursos {
         }
         else {
             throw new InexistenteException("Error - recurso inexistente");
+        }
+    }
+    
+    public void devolverRecursosProceso(Proceso proceso, Transicionable sistema) {
+        for (int x = 0; x < recursos.size(); x += 1) {
+            Recurso recurso = recursos.get(x);
+            Proceso primero = recurso.obtenerSiguienteProceso();
+            
+            if (primero != null) {
+                recurso.eliminarDeCola(proceso);
+                
+                // si es el primero de la lista, despierto al siguiente en la lista de espera
+                if (primero.equals(proceso)) {
+                    Proceso siguienteProceso = recurso.desencolarProceso();
+
+                    if (siguienteProceso != null) {
+                        sistema.transicion(Transicion.despertar, siguienteProceso);
+                    }
+                }
+            }
         }
     }
 }
