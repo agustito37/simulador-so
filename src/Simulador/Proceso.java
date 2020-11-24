@@ -24,21 +24,8 @@ public class Proceso implements Serializable {
         this.programa = programa;
     }
     
-    public int obtenerPeso(List<Operacion> operaciones, String operacion, int quantum) {
-        for (int x = 0; x < operaciones.size(); x += 1) {
-            Operacion actual = operaciones.get(x);
-            
-            if (actual.operacion.equals(operacion)) {
-                return actual.peso;
-            }
-        }
-        
-        Random random = new Random();
-        return random.nextInt(quantum) + 1;
-    }
-    
     public synchronized void ejecutarPrograma(
-            Transicionable sistema, AdministradorRecursos administrador, int quantum, List<Operacion> operaciones, 
+            Transicionable sistema, AdministradorRecursos administradorRecursos, int quantum, List<Operacion> operaciones, 
             int operacionesDelay, Usuario logueado
     ) throws InterruptedException {
         int suma = 0;
@@ -47,16 +34,18 @@ public class Proceso implements Serializable {
             sistema.wait(operacionesDelay);
             linea += 1;
             
+            // obtengo siguiente instrucción
             String instruccion = programa.next();
             suma += obtenerPeso(operaciones, instruccion, quantum);
+            String output = "Proceso " + this + ": " + instruccion + " (q " + suma + "/" + quantum + ")";
             
-            String output = "Proceso " + this + ": " + instruccion + " (" + suma + ")";
+            // evalúo tipo de instruccion
             if(esRecursoSolicitar(instruccion)){
-                boolean obtenido;
+                boolean disponible;
                 output += " solicitado";
                 
                 try {
-                    obtenido = administrador.solicitar(instruccion, this, logueado);
+                    disponible = administradorRecursos.solicitar(instruccion, this, logueado);
                 } catch(InexistenteException | DenegadoException ex) {
                     GUIInterface.write(output);
                     GUIInterface.write("Proceso " + this + ": " + ex.getMessage());
@@ -65,7 +54,7 @@ public class Proceso implements Serializable {
                 }
                 
                 // si estoy solicitando un recurso y no está disponible, lo bloqueo
-                if (!obtenido) {
+                if (!disponible) {
                     output += " (en uso)";
                     GUIInterface.write(output);
 
@@ -77,10 +66,10 @@ public class Proceso implements Serializable {
             }
             // si estoy devolviendo un recurso, desbloqueo el siguiente en la cola de espera
             else if(esRecursoDevolver(instruccion)){
-                Proceso siguienteProceso;
+                Proceso procesoADespertar;
                         
                 try {
-                    siguienteProceso = administrador.devolver(instruccion, this, logueado);
+                    procesoADespertar = administradorRecursos.devolver(instruccion, this, logueado);
                 } catch(InexistenteException | DenegadoException ex) {
                     GUIInterface.write(output);
                     GUIInterface.write("Proceso " + this + ": " + ex.getMessage());
@@ -91,8 +80,8 @@ public class Proceso implements Serializable {
                 output += " devuelto";
                 GUIInterface.write(output);
                 
-                if (siguienteProceso != null) {
-                    sistema.transicion(Transicion.despertar, siguienteProceso);
+                if (procesoADespertar != null) {
+                    sistema.transicion(Transicion.despertar, procesoADespertar);
                 }
                 
                 continue;
@@ -111,12 +100,25 @@ public class Proceso implements Serializable {
         sistema.transicion(Transicion.timeout, this);
     }
     
-    public boolean esRecursoSolicitar(String instruccion){
+    private boolean esRecursoSolicitar(String instruccion){
         return instruccion.contains("RS");
     }
      
-    public boolean esRecursoDevolver(String instruccion){
+    private boolean esRecursoDevolver(String instruccion){
         return instruccion.contains("RD");
+    }
+    
+    private int obtenerPeso(List<Operacion> operaciones, String operacion, int quantum) {
+        for (int x = 0; x < operaciones.size(); x += 1) {
+            Operacion actual = operaciones.get(x);
+            
+            if (actual.operacion.equals(operacion)) {
+                return actual.peso;
+            }
+        }
+        
+        Random random = new Random();
+        return random.nextInt(quantum) + 1;
     }
     
     @Override

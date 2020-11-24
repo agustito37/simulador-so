@@ -14,22 +14,22 @@ import java.util.List;
  * @author agustin
  */
 public class AdministradorMemoria {
-    private ArrayList<Proceso> procesos;
+    private ArrayList<Proceso> pedidos;
     private int memoriaInicial;
     private int memoriaDisponible;
     
     public AdministradorMemoria(int pMemoria) {
-        procesos = new ArrayList();
+        pedidos = new ArrayList();
         memoriaInicial = pMemoria;
         memoriaDisponible = pMemoria;
         GUIInterface.write("Administrador de memoria: " + memoriaDisponible + " bytes");
     }
     
-    public List<Proceso> procesosAsignados() {
+    public List<Proceso> asignarProcesosPedidos() {
         List<Proceso> aProcesar = new ArrayList();
         
-        for (int x = 0; x < procesos.size(); x += 1) {
-            Proceso proceso = procesos.get(x);
+        for (int x = 0; x < pedidos.size(); x += 1) {
+            Proceso proceso = pedidos.get(x);
             
             if (memoriaDisponible - proceso.programa.memoria >= 0) {
                 aProcesar.add(proceso);
@@ -41,7 +41,7 @@ public class AdministradorMemoria {
         }
         
         for (int x = 0; x < aProcesar.size(); x += 1) {
-            procesos.remove(aProcesar.get(x));
+            pedidos.remove(aProcesar.get(x));
         }
         
         return aProcesar;
@@ -56,7 +56,7 @@ public class AdministradorMemoria {
                 continue;
             }
             
-            procesos.add(proceso);
+            pedidos.add(proceso);
         }
     }
     
@@ -66,6 +66,6 @@ public class AdministradorMemoria {
     }
     
     public boolean estaVacio() {
-        return procesos.isEmpty();
+        return pedidos.isEmpty();
     }
 }

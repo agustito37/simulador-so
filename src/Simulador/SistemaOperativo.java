@@ -95,7 +95,7 @@ public class SistemaOperativo implements Transicionable {
             tickActual += 1;
             
             // chequeo si tengo procesos para comenzar, los traigo si hay memoria disponible
-            List<Proceso> procesosAsignados = administradorMemoria.procesosAsignados();
+            List<Proceso> procesosAsignados = administradorMemoria.asignarProcesosPedidos();
             for (int x = 0; x < procesosAsignados.size(); x++) {
                 // clono proceso y programa para no reutilizarlo cada vez que comienza
                 Proceso proceso = procesosAsignados.get(x).nuevo();
@@ -104,18 +104,18 @@ public class SistemaOperativo implements Transicionable {
                 transicion(Transicion.comenzar, proceso);
             }
             
-            // despacho procesos según su prioridad
+            // despacho procesos según su prioridad (despacho de a uno)
             Iterator<Proceso> procesosListos = listo.obtenerProcesosPriorizados(tickActual, schedulingFactor);
             if (procesosListos.hasNext()) {
                 transicion(Transicion.despachar, procesosListos.next());
             }
             
-            // ejecuto procesos en la lista de ejecucion
+            // ejecuto procesos en la lista de ejecucion (tiene que haber uno sólo despachado)
             Iterator<Proceso> procesosAEjecutar = ejecutando.obtenerProcesos();
             while (procesosAEjecutar.hasNext()) {
                 Proceso proceso = procesosAEjecutar.next();
                 
-                // chequeo si tiene permisos para ejecutar el programa
+                // chequeo si el usuario tiene permisos para ejecutar el programa
                 if(!Permisos.tieneAcceso(logueado, proceso.programa)){
                     GUIInterface.write("Proceso " + proceso + ": Error - permisos insuficientes");
                     this.transicion(Transicion.terminar, proceso);
@@ -132,13 +132,16 @@ public class SistemaOperativo implements Transicionable {
                     break;
                 } else {
                     GUIInterface.write("Sistema operativo: deadlock");
-                    
-                    // quito el primer proceso de la lista para evitar deadlock
-                    Proceso proceso = bloqueado.desencolar();
-                    GUIInterface.write("Proceso " + proceso + ": matado");
-                    transicion(Transicion.terminar, proceso);
+                    resolverDeadlock();
                 }
             }
         }
+    }
+    
+    private void resolverDeadlock () {
+        // quito el primer proceso de la lista de bloqueados para evitar deadlock
+        Proceso proceso = bloqueado.desencolar();
+        GUIInterface.write("Proceso " + proceso + ": matado");
+        transicion(Transicion.terminar, proceso);
     }
 }
