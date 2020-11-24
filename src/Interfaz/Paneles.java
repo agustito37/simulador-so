@@ -858,16 +858,21 @@ public class Paneles extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        procesos.removeRow(ProcesosTable.getSelectedRow());
-        ProcesosTable.updateUI();
+        int indice = ProcesosTable.getSelectedRow();
+        if (indice != -1) {
+            procesos.removeRow(indice);
+            ProcesosTable.updateUI();
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         Programa programa = ProgramasList.getSelectedValue();
-        Proceso proceso = new Proceso();
-        proceso.setearPrograma(programa);
-        procesos.addRow(proceso);
-        ProcesosTable.updateUI();
+        if (programa != null) {
+            Proceso proceso = new Proceso();
+            proceso.setearPrograma(programa);
+            procesos.addRow(proceso);
+            ProcesosTable.updateUI();
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -909,20 +914,25 @@ public class Paneles extends JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String operacionText = OperacionTxt.getText();
-        Permisos permiso = (Permisos)permisoProgramaCombo.getSelectedItem();
-        int memoria = Integer.parseInt(memoriaDisponible1.getText());
-        Programa programa = new Programa(operacionText, permiso, memoria);
-        programas.addRow(programa);
-        refrescarProgramas();
-        ProgramasTable.updateUI();
-        ProgramasList.updateUI();
+        if (!operacionText.isEmpty()) {
+            Permisos permiso = (Permisos)permisoProgramaCombo.getSelectedItem();
+            int memoria = Integer.parseInt(memoriaDisponible1.getText());
+            Programa programa = new Programa(operacionText, permiso, memoria);
+            programas.addRow(programa);
+            refrescarProgramas();
+            ProgramasTable.updateUI();
+            ProgramasList.updateUI();
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        programas.removeRow(ProgramasTable.getSelectedRow());
-        refrescarProgramas();
-        ProgramasTable.updateUI();
-        ProgramasList.updateUI();
+        int indice = ProgramasTable.getSelectedRow();
+        if (indice != -1) {
+            programas.removeRow(indice);
+            refrescarProgramas();
+            ProgramasTable.updateUI();
+            ProgramasList.updateUI();
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void operacionTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_operacionTxtActionPerformed
@@ -935,15 +945,20 @@ public class Paneles extends JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         String op = operacionTxt.getText();
-        int peso = Integer.parseInt(pesoTxt.getText());
-        Operacion operacion = new Operacion(op, peso);
-        operaciones.addRow(operacion);
-        OperacionesTable.updateUI();
+        if (!op.isEmpty()) {
+            int peso = Integer.parseInt(pesoTxt.getText());
+            Operacion operacion = new Operacion(op, peso);
+            operaciones.addRow(operacion);
+            OperacionesTable.updateUI();
+        }
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        operaciones.removeRow(OperacionesTable.getSelectedRow());
-        OperacionesTable.updateUI();
+        int indice = OperacionesTable.getSelectedRow();
+        if (indice != -1) {
+            operaciones.removeRow(indice);
+            OperacionesTable.updateUI();
+        }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void usuarioTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuarioTxtActionPerformed
@@ -952,17 +967,22 @@ public class Paneles extends JFrame {
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         String nombre = usuarioTxt.getText();
-        Permisos permiso = (Permisos)permisoCombo.getSelectedItem();
-        Usuario usuario = new Usuario(nombre, permiso);
-        usuarios.addRow(usuario);
-        UsuariosTable.updateUI();
-        refrescarLogueados();
+        if (!nombre.isEmpty()) {
+            Permisos permiso = (Permisos)permisoCombo.getSelectedItem();
+            Usuario usuario = new Usuario(nombre, permiso);
+            usuarios.addRow(usuario);
+            UsuariosTable.updateUI();
+            refrescarLogueados();
+        }
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        usuarios.removeRow(UsuariosTable.getSelectedRow());
-        UsuariosTable.updateUI();
-        refrescarLogueados();
+        int indice = UsuariosTable.getSelectedRow();
+        if (indice != -1) {
+            usuarios.removeRow(indice);
+            UsuariosTable.updateUI();
+            refrescarLogueados();
+        }
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void permisoComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_permisoComboActionPerformed
@@ -992,10 +1012,12 @@ public class Paneles extends JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         String id = recursoTxt.getText();
-        Permisos permiso = (Permisos)permisoRecursosCombo.getSelectedItem();
-        Recurso recurso = new Recurso(id, permiso);
-        recursos.addRow(recurso);
-        RecursosTable.updateUI();
+        if (!id.isEmpty()) {
+            Permisos permiso = (Permisos)permisoRecursosCombo.getSelectedItem();
+            Recurso recurso = new Recurso(id, permiso);
+            recursos.addRow(recurso);
+            RecursosTable.updateUI();
+        }
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void permisoRecursosComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_permisoRecursosComboActionPerformed
@@ -1003,8 +1025,11 @@ public class Paneles extends JFrame {
     }//GEN-LAST:event_permisoRecursosComboActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        recursos.removeRow(RecursosTable.getSelectedRow());
-        RecursosTable.updateUI();
+        int indice = RecursosTable.getSelectedRow();
+        if (indice != -1) {
+            recursos.removeRow(indice);
+            RecursosTable.updateUI();
+        }
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void memoriaDisponibleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memoriaDisponibleActionPerformed
