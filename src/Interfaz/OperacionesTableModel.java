@@ -15,7 +15,7 @@ import Simulador.Operacion;
  * @author agustin
  */
 public class OperacionesTableModel extends AbstractTableModel{
-   private final String[] columnNames = { "Operacion", "Peso" };
+   private final String[] columnNames = { "Operacion", "Tiempo (ns)" };
    public List<Operacion> lista;
    
    public OperacionesTableModel() {

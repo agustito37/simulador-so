@@ -37,7 +37,7 @@ public class Proceso implements Serializable {
             // obtengo siguiente instrucción
             String instruccion = programa.next();
             suma += obtenerPeso(operaciones, instruccion, quantum);
-            String output = "Proceso " + this + ": " + instruccion + " (q " + suma + "/" + quantum + ")";
+            String output = "Proceso " + this + ": " + instruccion + " (" + suma + "/" + quantum + " ns)";
             
             // evalúo tipo de instruccion
             if(esRecursoSolicitar(instruccion)){
