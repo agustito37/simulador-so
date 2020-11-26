@@ -50,7 +50,7 @@ public class SistemaOperativo implements Transicionable {
         switch (transicion) {
             case comenzar:
                 listo.agregarProceso(proceso);
-                proceso.prioridad = Prioridad.alta;
+                proceso.prioridad = Prioridad.baja;
                 output += "comenzado (prioridad alta)";
                 break;
             case terminar:
